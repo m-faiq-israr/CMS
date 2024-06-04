@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import logBack from "../assets/logBack.jpg";
 import LogoutButton from "../components/LogoutButton";
 import LayoutButton from "../components/layout/LayoutButton";
 
