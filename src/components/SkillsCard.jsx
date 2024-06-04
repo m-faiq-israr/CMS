@@ -1,5 +1,4 @@
 import React from 'react'
-import { MdMovieEdit } from "react-icons/md";
 
 const SkillsCard = ({icon:Icon,iconStyles, title, description}) => {
   return (
