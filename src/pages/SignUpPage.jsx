@@ -1,14 +1,18 @@
 import React from 'react'
 import InputField from '../components/InputField';
 import { Link, useNavigate } from 'react-router-dom';
+import { useStateContext } from "../context/ContextProvider";
 
 const SignUpPage = () => {
+    const { onChange, credentials } = useStateContext();
+
     const navigate = useNavigate();
      const handleSubmit = () => {
-       navigate("/home");
+      localStorage.setItem('credentials', JSON.stringify(credentials));
+       navigate("/admin");
      };
    return (
-     <div className="  bg-indigo-100 dark:bg-gray-800 py-6 sm:py-8 lg:py-12 bg-cover ">
+     <div className="  bg-indigo-100 dark:bg-gray-800 py-6 sm:py-8 lg:py-12 bg-cover h-screen ">
        <div className="mx-auto max-w-screen-2xl px-4 md:px-8 ">
          <h2 className="mb-4 text-center text-2xl font-bold text-gray-700 dark:text-white md:mb-10  font-poppins mt-10">
            Create an Account
@@ -19,29 +23,7 @@ const SignUpPage = () => {
            onSubmit={handleSubmit}
          >
            <div className="flex flex-col gap-8 p-10">
-             <div>
-               <label
-                 htmlFor="name"
-                 className="mb-2 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins"
-               >
-                 Name
-               </label>
-               <InputField name={"name"} type={"text"} placeholder={"admin"} />
-             </div>
-
-             <div>
-               <label
-                 htmlFor="profession"
-                 className="mb-2 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins "
-               >
-                 Profession
-               </label>
-               <InputField
-                 name={"profession"}
-                 type={"text"}
-                 placeholder={"Software Engineer"}
-               />
-             </div>
+             
              <div>
                <label
                  htmlFor="email"
@@ -53,6 +35,8 @@ const SignUpPage = () => {
                  name={"email"}
                  type={"email"}
                  placeholder={"admin@example.com"}
+                 onChange={onChange}
+                 width={"full"}
                />
              </div>
 
@@ -67,6 +51,8 @@ const SignUpPage = () => {
                  name={"password"}
                  type={"password"}
                  placeholder={"*********"}
+                 onChange={onChange}
+                 width={"full"}
                />
              </div>
 

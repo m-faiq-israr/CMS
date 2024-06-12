@@ -4,8 +4,11 @@ import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
 import ProjectSection from "./ProjectSection";
 import HeadingComponent from "./HeadingComponent";
+import { useStateContext } from "../context/ContextProvider";
 
 const MainCard = ({roundness, AboutmeBg}) => {
+    const {  getPersonalDetails } = useStateContext();
+
   return (
     <div
       className={` ${AboutmeBg} dark:bg-gray-800 pt-6  ${roundness} overflow-hidden w-[60rem] `}
@@ -15,7 +18,7 @@ const MainCard = ({roundness, AboutmeBg}) => {
         <HeadingComponent name={"About Me"} />
         <div className=" font-poppins font-semibold text-gray-500 dark:text-gray-300 text-sm pt-4">
           <p>
-            As a software engineer, I'm driven by a passion for problem-solving
+            {/* As a software engineer, I'm driven by a passion for problem-solving
             and innovation. With a keen eye for detail and a knack for logical
             thinking, I thrive in crafting elegant solutions to complex
             technical challenges. My expertise spans across various programming
@@ -23,7 +26,8 @@ const MainCard = ({roundness, AboutmeBg}) => {
             industry trends.
             <br /> Whether it's developing scalable web applications, optimizing
             algorithms for efficiency, or collaborating with cross-functional
-            teams
+            teams */}
+            {getPersonalDetails.aboutme}
           </p>
         </div>
       </div>

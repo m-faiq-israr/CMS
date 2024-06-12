@@ -14,7 +14,8 @@ import MyImage from "../assets/myImg1.jpg";
 import { useStateContext } from "../context/ContextProvider";
 
 const ProfileCard = () => {
-  const { credentials } = useStateContext();
+  const { getCredentials, getPersonalDetails } = useStateContext();
+ 
 
   const showToast = () => {
     toast.success("CV Downloaded", {
@@ -24,6 +25,7 @@ const ProfileCard = () => {
       pauseOnFocusLoss: false,
       className: "bg-green-400 text-white rounded-3xl font-poppins font-bold ",
     });
+
   };
   return (
     <div className="relative">
@@ -42,11 +44,11 @@ const ProfileCard = () => {
           style={{ height: "45%" }}
           className="mt-24 space-y-2 flex flex-col items-center justify-center -ml-"
         >
-          <h1 className="text-3xl font-bold text-gray-700 dark:text-white pb-2">
-            {credentials.name}
+          <h1 className="text-3xl font-bold text-gray-700 dark:text-white pb-2 text-center">
+            {`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}
           </h1>
           <div className="flex items-center justify-center bg-gray-200 w-40 h-6 text-center rounded-full text-sm text-gray-500 dark:text-gray-900 ">
-            <h3>{credentials.profession}</h3>
+            <h3>{getPersonalDetails.profession}</h3>
           </div>
           <div className="flex justify-center items-center gap-4 text-gray-700 dark:text-white pt-2">
             <FaGithub className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
@@ -62,22 +64,22 @@ const ProfileCard = () => {
           <div className="pl-6 text-gray-500 dark:text-gray-300 text-sm space-y-3">
             <div className="flex justify-start items-center space-x-2">
               <IoCalendarOutline />
-              <p>December 1, 2003</p>
+              <p>{getPersonalDetails.dob}</p>
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <GoLocation style={{ fontSize: "15px" }} />
-              <p>Karachi, Pakistan</p>
+              <p>{getPersonalDetails.location}</p>
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <TfiEmail style={{ fontSize: "15px" }} />
-              <p>{credentials.email}</p>
+              <p>{getCredentials.email}</p>
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <FaMobileAlt style={{ fontSize: "15px" }} />
-              <p>+92-3402311232</p>
+              <p>{getPersonalDetails.mobileno}</p>
             </div>
 
             <div className="flex justify-start items-center space-x-2">

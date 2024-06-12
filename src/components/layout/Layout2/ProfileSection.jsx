@@ -8,8 +8,11 @@ import SkillTab from "./SkillTab";
 import EducationTab from "./EducationTab";
 import LanguageTab from "./LanguageTab";
 import Button from "../../Button";
-
+import { useStateContext } from "../../../context/ContextProvider";
 const ProfileSection = () => {
+  const skills = JSON.parse(localStorage.getItem("skills"));
+  const {storedEducationData} = useStateContext();
+  
   return (
     <div className=" bg-gray-800 w-[20rem]  pt-10 rounded-l-xl">
       {/* div for the image */}
@@ -29,14 +32,12 @@ const ProfileSection = () => {
           </div>
           <h1 className="text-2xl">Skills</h1>
         </div>
-        <div className="mt-4 flex flex-col items-start ">
-          <SkillTab skillName={"Web Development"} />
-          <SkillTab skillName={"Web Design"} />
-          <SkillTab skillName={"Android Development"} />
-          <SkillTab skillName={"Software Requiements"} />
-          <SkillTab skillName={"Artificial Intelligence"} />
-          <SkillTab skillName={"Video Editing"} />
-          <SkillTab skillName={"Software Testing"} />
+        <div className="mt-4">
+          {skills.map((skill, index) => (
+            <div key={index} className=" flex flex-col items-start ">
+              <SkillTab skillName={skill} />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -49,18 +50,9 @@ const ProfileSection = () => {
           <h1 className="text-2xl">Education</h1>
         </div>
         <div className="mt-4">
-          <EducationTab
-            instituteName={"NED University of Engineering & Technology"}
-            degreeName={"Bachelors in Software Engineering"}
-          />
-          <EducationTab
-            instituteName={"AdamJee Government Science College"}
-            degreeName={"Intermediate"}
-          />
-          <EducationTab
-            instituteName={"Quaid-e-Azam Rangers School"}
-            degreeName={"Matriculation"}
-          />
+         {storedEducationData.map((education, index)=>(
+          <EducationTab instituteName={education.institute} degreeName={education.degree} key={index}/>
+         ))}
         </div>
       </div>
 

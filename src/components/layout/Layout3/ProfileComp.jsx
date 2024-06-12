@@ -5,7 +5,12 @@ import { FaXTwitter } from "react-icons/fa6";
 import { TfiEmail } from "react-icons/tfi";
 import { GoLocation } from "react-icons/go";
 import { IoCalendarOutline } from "react-icons/io5";
+import { useStateContext } from "../../../context/ContextProvider";
+
 const ProfileComp = () => {
+    const { getCredentials, getPersonalDetails } = useStateContext();
+    console.log(getCredentials.email);
+
   return (
     <div className="w-[60rem] rounded-t-2xl bg-gray-100 dark:bg-gray-900 pt-6 pb-6 px-5 flex justify-between items-center  ">
       <div className="flex gap-4">
@@ -20,10 +25,10 @@ const ProfileComp = () => {
 
         <div className="pt-4 flex flex-col justify-center items-center">
           <h1 className="text-4xl font-bold text-gray-700 dark:text-white pb-5">
-            M Faiq Israr
+            {`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}
           </h1>
           <div className="flex items-center justify-center bg-gray-200 w-40 h-6 text-center rounded-full text-sm text-gray-500 dark:text-gray-900  font-poppins">
-            <h3>Software Engineer</h3>
+            <h3>{getPersonalDetails.profession}</h3>
           </div>
           <div className="flex justify- items-center gap-4 text-gray-700 dark:text-white pt-5">
             <FaGithub className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
@@ -36,22 +41,22 @@ const ProfileComp = () => {
         <div className=" text-gray-500 dark:text-gray-300 text-md space-y-3  pt-4 font-poppins">
           <div className="flex justify-start items-center space-x-2">
             <IoCalendarOutline />
-            <p>December 1, 2003</p>
+            <p>{getPersonalDetails.dob}</p>
           </div>
 
           <div className="flex justify-start items-center space-x-2">
             <GoLocation style={{ fontSize: "15px" }} />
-            <p>Karachi, Pakistan</p>
+            <p>{getPersonalDetails.location}</p>
           </div>
 
           <div className="flex justify-start items-center space-x-2">
             <TfiEmail style={{ fontSize: "15px" }} />
-            <p>mfaiqisrar@gmail.com</p>
+            <p>{getCredentials.email}</p>
           </div>
 
           <div className="flex justify-start items-center space-x-2">
             <FaMobileAlt style={{ fontSize: "15px" }} />
-            <p>+92-3402311232</p>
+            <p>{getPersonalDetails.mobileno}</p>
           </div>
         </div>
       </div>

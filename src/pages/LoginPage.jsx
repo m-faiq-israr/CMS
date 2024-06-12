@@ -1,12 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logBack from "../assets/logBack.jpg";
 import InputField from "../components/InputField";
-
+import { useStateContext } from "../context/ContextProvider";
 const LoginPage = () => {
+  const { onChange } = useStateContext();
   const navigate = useNavigate();
   const handleSubmit = () => {
-    navigate("/home");
+    navigate("/admin");
   };
   return (
     <div
@@ -36,6 +36,8 @@ const LoginPage = () => {
                 name={"email"}
                 type={"email"}
                 placeholder={"admin@example.com"}
+                onChange={onChange}
+                width={"full"}
               />
             </div>
 
@@ -50,6 +52,8 @@ const LoginPage = () => {
                 name={"password"}
                 type={"password"}
                 placeholder={"*********"}
+                onChange={onChange}
+                width={"full"}
               />
             </div>
 

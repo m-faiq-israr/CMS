@@ -7,20 +7,20 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import { ContextProvider } from "./context/ContextProvider";
 import SignUpPage from "./pages/SignUpPage";
-import LayoutButton from "./components/layout/LayoutButton";
+import AdminPage from "./pages/AdminPage";
+import MainPage from "./pages/MainPage";
 
 function App() {
   return (
     <ContextProvider>
       <BrowserRouter>
-        <div className=" absolute right-4 top-2 flex items-center gap-2">
-          
+        {/* <div className=" absolute right-4 top-2 flex items-center gap-2">
           <ThemeToggle />
-        </div>
+        </div> */}
 
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/admin" element={<MainPage />} />
           <Route path="/register" element={<SignUpPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>

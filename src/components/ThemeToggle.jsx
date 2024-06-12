@@ -35,7 +35,7 @@ const ThemeToggle = () => {
       onClick={handleToggleTheme}
       
    
-        className="h-12 w-12 rounded-2xl p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+        className="h-10 w-10 mt-1 rounded-2xl p-2 hover:bg-indigo-200 dark:hover:bg-gray-700"
       >
         <svg
           className="fill-violet-800 block dark:hidden"
