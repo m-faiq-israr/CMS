@@ -32,7 +32,7 @@ const SideProfileComp = () => {
                   <h1 className="font-bold text-xl text-gray-800 dark:text-white">{`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}</h1>
                 ) : (
                   <h1 className="font-bold text-xl text-gray-800 dark:text-white">
-                    Undefined User
+                    User
                   </h1>
                 )}
                 {getCredentials ? (
