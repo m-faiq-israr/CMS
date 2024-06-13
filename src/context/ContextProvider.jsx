@@ -5,153 +5,172 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 const StateContext = createContext();
 
-export const ContextProvider = ({children})=>{
+export const ContextProvider = ({ children }) => {
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
 
-    const [credentials, setCredentials] = useState({email:'', password:''});
+  const onChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
 
-    const onChange = (e) =>{
-        setCredentials({...credentials, [e.target.name]:e.target.value})
-    }
+  const [skillCard, setskillCard] = useState("");
 
-    const [skillCard, setskillCard] = useState('')
+  const [selectLayoutButton, setSelectLayoutButton] = useState(false);
 
-    const [selectLayoutButton, setSelectLayoutButton] = useState(false);
+  // const downloadPdf = () => {
+  //   const path = "../assets/FAIQ RESUME UPDATED.pdf";
+  //   const link = document.createElement("a");
+  //   link.href = path;
+  //   link.download = "resume.pdf";
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
 
-    // const downloadPdf = () => {
-    //   const path = "../assets/FAIQ RESUME UPDATED.pdf";
-    //   const link = document.createElement("a");
-    //   link.href = path;
-    //   link.download = "resume.pdf";
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // };
+  const downloadPDF = () => {
+    const pdfPath = "../assets/FAIQ RESUME UPDATED.pdf";
+    const filename = `${credentials.name} Resume.pdf`;
+    FileDownload(pdfPath, filename);
+  };
 
-     const downloadPDF = () => {
-       const pdfPath = "../assets/FAIQ RESUME UPDATED.pdf";
-       const filename = `${credentials.name} Resume.pdf`; 
-       FileDownload(pdfPath, filename);
-     };
+  const [openSidebar, setopenSidebar] = useState(true);
 
-     const [openSidebar, setopenSidebar] = useState(true)
+  const [sidebarPage, setsidebarPage] = useState(null);
 
-     const [sidebarPage, setsidebarPage] = useState(null);
+  const [activeTab, setActiveTab] = useState("Home Page");
 
-         const [activeTab, setActiveTab] = useState("Home Page");
+  const getCredentials = JSON.parse(localStorage.getItem("credentials"));
+  
+ 
 
+  const [inputs, setInputs] = useState([
+    { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
+  ]);
 
-      const getCredentials = JSON.parse(localStorage.getItem("credentials"));
-      const getPersonalDetails = JSON.parse(
-        localStorage.getItem("personalDetails")
-      );
-
-         const [inputs, setInputs] = useState([
-           { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
-         ]);
-
-         const handleChange = (index, field, value) => {
-           setInputs((prevInputs) => {
-             const updatedInputs = [...prevInputs];
-             updatedInputs[index][field] = value;
-             return updatedInputs;
-           });
-         };
-
-         const storedEducationData = JSON.parse(
-           localStorage.getItem("educationData")
-         );
-
-         const [experienceInput, setexperienceInput] = useState([{designation:'', companyName:'', startDate:'', endDate:'', point1:'', point2:'', point3:'', location:''}])
-
-            const handleExperienceChange = (index, field, value) => {
-              setexperienceInput((prevInputs) => {
-                const updatedInputs = [...prevInputs];
-                updatedInputs[index][field] = value;
-                return updatedInputs;
-              });
-            };
+  const handleChange = (index, field, value) => {
+    setInputs((prevInputs) => {
+      const updatedInputs = [...prevInputs];
+      updatedInputs[index][field] = value;
+      return updatedInputs;
+    });
+  };
+    const [personalDetails, setpersonalDetails] = useState({
+      fname: "",
+      lname: "",
+      profession: "",
+      location: "",
+      mobileno: "",
+      dob: "",
+   
+      aboutme: "",
+    });
 
 
-              const storedExperienceData = JSON.parse(
-                localStorage.getItem("experienceData")
-              );
+     const getPersonalDetails = JSON.parse(
+       localStorage.getItem("personalDetails")
+     );
 
 
-               const [projectInput, setprojectInput] = useState([
-                 {
-                   projectTitle: "",
-                   techUsed: "",
-                   point1: "",
-                 },
-               ]);
+  const storedEducationData = JSON.parse(localStorage.getItem("educationData"));
 
-               const handleProjectChange = (index, field, value) => {
-                 setprojectInput((prevInputs) => {
-                   const updatedInputs = [...prevInputs];
-                   updatedInputs[index][field] = value;
-                   return updatedInputs;
-                 });
-               };
+  const [experienceInput, setexperienceInput] = useState([
+    {
+      designation: "",
+      companyName: "",
+      startDate: "",
+      endDate: "",
+      point1: "",
+      point2: "",
+      point3: "",
+      location: "",
+    },
+  ]);
 
-               const storedProjectData = JSON.parse(
-                 localStorage.getItem("projectData")
-               );
+  const handleExperienceChange = (index, field, value) => {
+    setexperienceInput((prevInputs) => {
+      const updatedInputs = [...prevInputs];
+      updatedInputs[index][field] = value;
+      return updatedInputs;
+    });
+  };
 
-                const showToast = (title) => {
-                  toast.success(title, {
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    loading: false,
-                    pauseOnFocusLoss: false,
-                    
-                    className:
-                      "bg-green-400 text-white rounded-2xl  font-poppins font-bold ",
-                  });
-                };
+  const storedExperienceData = JSON.parse(
+    localStorage.getItem("experienceData")
+  );
 
+  const [projectInput, setprojectInput] = useState([
+    {
+      projectTitle: "",
+      techUsed: "",
+      point1: "",
+    },
+  ]);
 
+  const handleProjectChange = (index, field, value) => {
+    setprojectInput((prevInputs) => {
+      const updatedInputs = [...prevInputs];
+      updatedInputs[index][field] = value;
+      return updatedInputs;
+    });
+  };
 
+  const storedProjectData = JSON.parse(localStorage.getItem("projectData"));
 
+  const showToast = (title) => {
+    toast.success(title, {
+      autoClose: 1000,
+      hideProgressBar: true,
+      loading: false,
+      pauseOnFocusLoss: false,
 
+      className: "bg-green-400 text-white rounded-2xl  font-poppins font-bold ",
+    });
+  };
 
-    return (
-      <StateContext.Provider
-        value={{
-          credentials,
-          setCredentials,
-          onChange,
-          skillCard,
-          setskillCard,
-          downloadPDF,
-          selectLayoutButton,
-          setSelectLayoutButton,
-          openSidebar,
-          setopenSidebar,
-          sidebarPage,
-          setsidebarPage,
-          getCredentials,
-          getPersonalDetails,
-          handleChange,
-          inputs,
-          setInputs,
-          storedEducationData,
-          experienceInput,
-          setexperienceInput,
-          handleExperienceChange,
-          storedExperienceData,
-          projectInput,
-          setprojectInput,
-          handleProjectChange,
-          storedProjectData,
-          activeTab,
-          setActiveTab,
-          showToast,
-        }}
-      >
-        {children}
-      </StateContext.Provider>
-    );
+  // const storedImage = localStorage.getItem("profilePicture");
+  // const [myImage, setMyImage] = useState(
+  //   storedImage ? JSON.parse(storedImage) : ""
+  // );
 
-}
+  return (
+    <StateContext.Provider
+      value={{
+        credentials,
+        setCredentials,
+        onChange,
+        skillCard,
+        setskillCard,
+        downloadPDF,
+        selectLayoutButton,
+        setSelectLayoutButton,
+        openSidebar,
+        setopenSidebar,
+        sidebarPage,
+        setsidebarPage,
+        getCredentials,
+        getPersonalDetails,
+        handleChange,
+        inputs,
+        setInputs,
+        storedEducationData,
+        experienceInput,
+        setexperienceInput,
+        handleExperienceChange,
+        storedExperienceData,
+        projectInput,
+        setprojectInput,
+        handleProjectChange,
+        storedProjectData,
+        activeTab,
+        setActiveTab,
+        showToast,
+        personalDetails,
+        setpersonalDetails,
+     
+      }}
+    >
+      {children}
+    </StateContext.Provider>
+  );
+};
 
-export const useStateContext = ()=> useContext(StateContext);
+export const useStateContext = () => useContext(StateContext);

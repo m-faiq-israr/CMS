@@ -8,6 +8,8 @@ const SignUpPage = () => {
 
     const navigate = useNavigate();
      const handleSubmit = () => {
+
+      
       localStorage.setItem('credentials', JSON.stringify(credentials));
        navigate("/admin");
      };

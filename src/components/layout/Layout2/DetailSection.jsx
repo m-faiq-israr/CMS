@@ -24,21 +24,24 @@ const DetailSection = () => {
           </div>
           <h1 className="text-3xl">Work Experience</h1>
         </div>
-        <div className="mt-4">
-          {storedExperienceData.map((experience, index) => (
-            <WorkExperience
-              key={index}
-              company={experience.companyName}
-              designation={experience.designation}
-              startDate={experience.startDate}
-              endDate={experience.endDate}
-              location={experience.location}
-              point1={experience.point1}
-              point2={experience.point2}
-              point3={experience.point3}
-            />
-          ))}
+          {storedExperienceData ? (
+            
+            <div className="mt-4">
+            {storedExperienceData.map((experience, index) => (
+              <WorkExperience
+                key={index}
+                company={experience.companyName}
+                designation={experience.designation}
+                startDate={experience.startDate}
+                endDate={experience.endDate}
+                location={experience.location}
+                point1={experience.point1}
+                point2={experience.point2}
+                point3={experience.point3}
+              />
+            ))}
         </div>
+          ) : (<div className='mt-4 mb-60'></div>)}
       </div>
 
       {/* project section */}
@@ -49,6 +52,8 @@ const DetailSection = () => {
           </div>
           <h1 className="text-3xl">Projects</h1>
         </div>
+        {storedProjectData ? (
+
         <div>
           {storedProjectData.map((project, index) => (
             <ProjectComponent
@@ -58,6 +63,9 @@ const DetailSection = () => {
             />
           ))}
         </div>
+        ) : (
+          <div className=''></div>
+        )}
       </div>
     </div>
   );

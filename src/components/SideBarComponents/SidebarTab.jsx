@@ -11,14 +11,14 @@ const SidebarTab = ({ name, icon, onClick, isActive }) => {
     <>
       {openSidebar ? (
         <div
-          className={`   rounded-xl my-1 mx-3 py-3 px-3 font-poppins cursor-pointer hover:bg-indigo-500 hover:text-white text-gray-700 dark:text-white ${isActive ? 'text-white' : ''} font-bold flex items-center justify-between select-none ${
+          className={`   rounded-xl my-1 mx-3 py-3 px-3 font-poppins cursor-pointer hover:bg-indigo-500 hover:text-white text-gray-700 dark:text-white ${isActive ? 'text-white' : ''} font- flex items-center justify-between select-none ${
             isActive ? "bg-indigo-500" : ""
           } `}
           onClick={onClick}
         >
           <div className="flex items-center gap-2 ">
             <div className=" text-2xl">{icon}</div>
-            <div>{name}</div>
+            <div className=''>{name}</div>
           </div>
           <div className={`text-gray-800 dark:text-white hover:text-white  ${isActive ? 'text-white' : ''}`}>
             <IoIosArrowForward

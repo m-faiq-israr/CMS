@@ -44,11 +44,19 @@ const ProfileCard = () => {
           style={{ height: "45%" }}
           className="mt-24 space-y-2 flex flex-col items-center justify-center -ml-"
         >
-          <h1 className="text-3xl font-bold text-gray-700 dark:text-white pb-2 text-center">
-            {`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}
-          </h1>
-          <div className="flex items-center justify-center bg-gray-200 w-40 h-6 text-center rounded-full text-sm text-gray-500 dark:text-gray-900 ">
-            <h3>{getPersonalDetails.profession}</h3>
+          {getPersonalDetails ? (
+            <h1 className="text-3xl font-bold text-gray-700 dark:text-white pb-2 text-center">
+              {`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}
+            </h1>
+          ) : (
+            <h1></h1>
+          )}
+          <div className="flex items-center justify-center bg-gray-200  py-1 px-4 text-center rounded-full text-sm text-gray-500 dark:text-gray-900 ">
+            {getPersonalDetails ? (
+              <h3>{getPersonalDetails.profession}</h3>
+            ) : (
+              <h3></h3>
+            )}
           </div>
           <div className="flex justify-center items-center gap-4 text-gray-700 dark:text-white pt-2">
             <FaGithub className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
@@ -64,28 +72,33 @@ const ProfileCard = () => {
           <div className="pl-6 text-gray-500 dark:text-gray-300 text-sm space-y-3">
             <div className="flex justify-start items-center space-x-2">
               <IoCalendarOutline />
-              <p>{getPersonalDetails.dob}</p>
+              {getPersonalDetails ? <p>{getPersonalDetails.dob}</p> : <p></p>}
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <GoLocation style={{ fontSize: "15px" }} />
-              <p>{getPersonalDetails.location}</p>
+              {getPersonalDetails ? (
+                <p>{getPersonalDetails.location}</p>
+              ) : (
+                <p></p>
+              )}
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <TfiEmail style={{ fontSize: "15px" }} />
-              <p>{getCredentials.email}</p>
+              {getCredentials ? <p>{getCredentials.email}</p> : <p></p>}
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <FaMobileAlt style={{ fontSize: "15px" }} />
-              <p>{getPersonalDetails.mobileno}</p>
+              {getPersonalDetails ? <p>{getPersonalDetails.mobileno}</p> : <p></p>}
             </div>
 
-            <div className="flex justify-start items-center space-x-2">
+            {/* <div className="flex justify-start items-center space-x-2">
               <SiSkypeforbusiness style={{ fontSize: "15px" }} />
+
               <p>faiq_israr</p>
-            </div>
+            </div> */}
           </div>
           <div
             className="flex items-center justify-center pt-4"

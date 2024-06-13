@@ -7,12 +7,21 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 
 const PersonalDetails = () => {
-  const { openSidebar, showToast } = useStateContext();
-  const [personalDetails, setpersonalDetails] = useState({fname:'', lname:'', profession:'', location:'', mobileno:'', dob:'', github:'', linkedin:'', aboutme:''})
+  const { openSidebar, showToast, personalDetails, setpersonalDetails } =
+    useStateContext();
   
   const onChange = (e) =>{
     setpersonalDetails({...personalDetails, [e.target.name]:e.target.value});
   }
+
+    const [profilePicture, setProfilePicture] = useState(null);
+
+    // Function to handle file input change
+    const handleFileChange = (event) => {
+      const file = event.target.files[0]; // Get the first file from the input
+      setProfilePicture(file); // Set the file in state
+    };
+
 
   const handleSubmit = (e) =>{
     e.preventDefault();
@@ -24,10 +33,9 @@ const PersonalDetails = () => {
       location: "",
       mobileno: "",
       dob: "",
-      github: "",
-      linkedin: "",
       aboutme: "",
     });
+    localStorage.setItem("profilePicture", JSON.stringify(profilePicture));
     showToast('Details Successfully Added');
 
     
@@ -123,7 +131,7 @@ const PersonalDetails = () => {
                 />
               </div>
             </div>
-            <div className="mt-4  space-y-4">
+            {/* <div className="mt-4  space-y-4">
               <InputDetails
                 heading={"Github Account"}
                 htmlFor={"github"}
@@ -144,7 +152,7 @@ const PersonalDetails = () => {
                 width={"full"}
                 onChange={onChange}
               />
-            </div>
+            </div> */}
             <div className="mt-4  flex flex-col ">
               <label
                 className="font-semibold text-lg ml-2 text-gray-600 dark:text-gray-200"
@@ -161,13 +169,32 @@ const PersonalDetails = () => {
                 placeholder="Write brief introduction about yourself"
               />
             </div>
+            <div className="mt-4 font-poppins flex flex-col">
+              <label className="font-semibold text-lg ml-2 text-gray-600 dark:text-gray-200" htmlFor="profilePicture">
+                Upload Picture
+              </label>
+              <input
+                className="bg-gray-100 cursor-pointer"
+                type="file"
+                id="profilePicture"
+                name="profilePicture"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              <p
+                className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                id="file_input_help"
+              >
+                SVG, PNG, JPG or GIF (MAX. 800x400px).
+              </p>
+            </div>
             <div className="mt-4">
-              <InputButton name={"Add Details"} />
+              <InputButton name={"Save"} />
             </div>
           </div>
         </form>
       </div>
-        <ToastContainer position="bottom-center" />
+      <ToastContainer position="bottom-center" />
     </div>
   );
 };

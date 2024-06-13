@@ -3,10 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 import { useStateContext } from "../context/ContextProvider";
 const LoginPage = () => {
-  const { onChange } = useStateContext();
+  const { onChange, credentials } = useStateContext();
   const navigate = useNavigate();
   const handleSubmit = () => {
+          localStorage.setItem("credentials", JSON.stringify(credentials));
+
     navigate("/admin");
+    
   };
   return (
     <div

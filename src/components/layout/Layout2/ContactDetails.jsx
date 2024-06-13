@@ -14,20 +14,21 @@ const ContactDetails = ({ linkedIn}) => {
     <div className="font-poppins bg-gray-800 text-gray-200 py-5 pl-12 rounded-lg grid grid-cols-2 gap-x-24 gap-y-4 mt-4">
       <div className="flex items-center gap-2">
         <MdLocalPostOffice />
-        <p>{getCredentials.email}</p>
+        {getCredentials ? <p>{getCredentials.email}</p> : <p></p>}
       </div>
 
       <div className="flex items-center gap-2">
         <FaMobile />
-        <p>{getPersonalDetails.mobileno}</p>
+        {getPersonalDetails ? <p>{getPersonalDetails.mobileno}</p> : <p></p>}
       </div>
       <div className="flex items-center gap-2">
         <IoLocationSharp />
-        <p>{getPersonalDetails.location}</p>
+        {getPersonalDetails ? <p>{getPersonalDetails.location}</p> : <p></p>}
       </div>
       <div className="flex items-center gap-2">
         <BsLinkedin />
-        <p>{linkedIn}</p>
+        {getPersonalDetails ? <p>{`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}</p> : <p></p>}
+       
       </div>
     </div>
   );

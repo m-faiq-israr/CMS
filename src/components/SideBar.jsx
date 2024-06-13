@@ -38,52 +38,50 @@ const SideBar = () => {
       } relative duration-300 shadow-lg`}
     >
       <SidebarMenuIcon />
-      <div>
+      <div className='h-full flex flex-col justify-between pb-4'>
+        <div className=''>
         <SideProfileComp />
+          <div className="pt-6">
+            <SidebarTab
+              name={"Home Page"}
+              icon={<GoHomeFill />}
+              onClick={() => handleTabClick("Home Page")}
+              isActive={activeTab === "Home Page"}
+            />
+            <SidebarTab
+              name={"Personal Details"}
+              icon={<IoPersonCircle />}
+              onClick={() => handleTabClick("Personal Details")}
+              isActive={activeTab === "Personal Details"}
+            />
+            <SidebarTab
+              name={"Skill Section"}
+              icon={<FaCode />}
+              onClick={() => handleTabClick("Skill Section")}
+              isActive={activeTab === "Skill Section"}
+            />
+            <SidebarTab
+              name={"Education Section"}
+              icon={<RiGraduationCapFill />}
+              onClick={() => handleTabClick("Education Section")}
+              isActive={activeTab === "Education Section"}
+            />
+            <SidebarTab
+              name={"Experience Section"}
+              icon={<MdWork />}
+              onClick={() => handleTabClick("Experience Section")}
+              isActive={activeTab === "Experience Section"}
+            />
+            <SidebarTab
+              name={"Project Section"}
+              icon={<FaLaptopCode />}
+              onClick={() => handleTabClick("Project Section")}
+              isActive={activeTab === "Project Section"}
+            />
+          </div>
 
-        <div className="pt-6">
-          <SidebarTab
-            name={"Home Page"}
-            icon={<GoHomeFill />}
-            onClick={() => handleTabClick("Home Page")}
-            isActive={activeTab === "Home Page"}
-          />
-          <SidebarTab
-            name={"Personal Details"}
-            icon={<IoPersonCircle />}
-            onClick={() => handleTabClick("Personal Details")}
-            isActive={activeTab === "Personal Details"}
-          />
-          <SidebarTab
-            name={"Skill Section"}
-            icon={<FaCode />}
-            onClick={() => handleTabClick("Skill Section")}
-            isActive={activeTab === "Skill Section"}
-          />
-          <SidebarTab
-            name={"Education Section"}
-            icon={<RiGraduationCapFill />}
-            onClick={() => handleTabClick("Education Section")}
-            isActive={activeTab === "Education Section"}
-          />
-          <SidebarTab
-            name={"Experience Section"}
-            icon={<MdWork />}
-            onClick={() => handleTabClick("Experience Section")}
-            isActive={activeTab === "Experience Section"}
-          />
-          <SidebarTab
-            name={"Project Section"}
-            icon={<FaLaptopCode />}
-            onClick={() => handleTabClick("Project Section")}
-            isActive={activeTab === "Project Section"}
-          />
         </div>
-        {/* <div>
-
-        <ThemeToggle/>
-        </div> */}
-        <div className="mx-3 mt-36">{openSidebar && <LogoutButton />}</div>
+          <div className="mx-3 ">{openSidebar && <LogoutButton />}</div>
       </div>
     </div>
   );

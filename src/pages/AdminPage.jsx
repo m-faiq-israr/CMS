@@ -18,7 +18,7 @@ const AdminPage = () => {
         </div>
       </div>
       <div className={` `}>
-        <div className={` absolute right-2 top-1  ${openSidebar ? "" : ""}`}>
+        <div className={` absolute right-2 top-1   ${openSidebar ? "" : ""}`}>
           <ThemeToggle />
         </div>
         {sidebarPage === "Home Page" ? (
