@@ -17,7 +17,7 @@ const ProjectSection = () => {
           ))}
         </div>
       ) : (
-        <div className="mb-28"></div>
+        <div className="pb-28"></div>
       )}
     </>
   );
