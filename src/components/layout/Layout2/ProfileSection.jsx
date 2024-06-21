@@ -72,25 +72,7 @@ const ProfileSection = () => {
         </div>
       </div>
 
-      {/* Language Seciton */}
-      {/* <div className="pl-6 pt-8">
-        <div className="flex items-center gap-2 text-gray-200 font-bold text-xl font-poppins">
-          <div className="bg-gray-200 w-8 h-8 flex items-center justify-center rounded-full text-gray-800">
-            <IoLanguageSharp />
-          </div>
-          <h1 className="text-2xl">Languages</h1>
-        </div>
-        <div className="mt-4">
-          <LanguageTab
-            language={"English"}
-            proficiency={"Professional Working Proficiency"}
-          />
-          <LanguageTab
-            language={"Urdu"}
-            proficiency={"Native or Bilingual Proficiency"}
-          />
-        </div>
-      </div> */}
+     
 
       {/* download cv button */}
       <div className="flex justify-center pt-8 pb-8">

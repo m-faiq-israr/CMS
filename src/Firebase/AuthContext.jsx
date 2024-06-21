@@ -21,6 +21,8 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
+  
+
   const logout = () => {
     signOut(auth)
       .then(() => {

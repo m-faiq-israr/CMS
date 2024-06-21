@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import MyImage from '../../assets/myImg1.jpg'
-import user from '../../assets/user1.png'
+import userPic from '../../assets/user1.png'
 import { useStateContext } from '../../context/ContextProvider';
-
+import { useAuth } from '../../Firebase/AuthContext';
 
 const SideProfileComp = () => {
     const {
@@ -10,8 +10,10 @@ const SideProfileComp = () => {
       setopenSidebar,
       getCredentials,
       getPersonalDetails,
+      userEmail
  
     } = useStateContext();
+    const {user} = useAuth();
     
   return (
     <>
@@ -23,7 +25,7 @@ const SideProfileComp = () => {
                 
                 <img
                   className="w-full h-full object-cover rounded-full "
-                  src={user}
+                  src={userPic}
                   alt="Picture not available"
                 />
               </div>
@@ -35,9 +37,9 @@ const SideProfileComp = () => {
                     User
                   </h1>
                 )}
-                {getCredentials ? (
+                {user ? (
                   <p className="text-gray-600 dark:text-gray-300 text-sm font-semibold duration-300  ">
-                    {getCredentials.email}
+                    {user.email}
                   </p>
                 ) : (
                   <p></p>

@@ -10,6 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import ThemeToggle from "../components/ThemeToggle";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
+
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -19,6 +20,7 @@ import {
 import auth from "../Firebase/firebase";
 
 const SignUpPage = () => {
+  const {setuserEmail} = useStateContext();
   const navigate = useNavigate();
 
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -36,6 +38,7 @@ const SignUpPage = () => {
     )
       .then((userCredential) => {
         const user = userCredential.user;
+
         navigate("/");
       })
       .catch((error) => {
@@ -45,59 +48,36 @@ const SignUpPage = () => {
         console.log(errorMessage);
       });
   };
+
   const googleLogin = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
         const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
+
         navigate("/");
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
         console.log(credential);
       });
   };
 
   const facebookLogin = () => {
     const provider = new FacebookAuthProvider();
-
     signInWithPopup(auth, provider)
       .then((result) => {
-        // The signed-in user info.
         const user = result.user;
-
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
-        navigate("/");
 
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
+        navigate("/");
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
         const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(error.message);
-
-        // ...
       });
   };
   return (
@@ -117,7 +97,7 @@ const SignUpPage = () => {
             <p className=" text-sm text-gray-600 dark:text-gray-200 pl-1 ">
               Already have an account?{" "}
               <Link
-                to="/"
+                to="/login"
                 className="text-blue-600 font-semibold dark:text-blue-400 transition duration-100 hover:text-blue-700 active:text-indigo-700"
               >
                 Sign in

@@ -6,9 +6,10 @@ import { TfiEmail } from "react-icons/tfi";
 import { GoLocation } from "react-icons/go";
 import { IoCalendarOutline } from "react-icons/io5";
 import { useStateContext } from "../../../context/ContextProvider";
-
+import { useAuth } from "../../../Firebase/AuthContext";
 const ProfileComp = () => {
     const { getCredentials, getPersonalDetails } = useStateContext();
+    const {user} = useAuth();
 
   return (
     <div className="w-[60rem] rounded-t-2xl bg-gray-100 dark:bg-gray-900 pt-6 pb-6 px-5 flex justify-between items-center  ">
@@ -62,12 +63,16 @@ const ProfileComp = () => {
 
           <div className="flex justify-start items-center space-x-2">
             <TfiEmail style={{ fontSize: "15px" }} />
-            {getPersonalDetails ? <p>{getCredentials.email}</p> : <p></p>}
+            {user ? <p>{user.email}</p> : <p></p>}
           </div>
 
           <div className="flex justify-start items-center space-x-2">
             <FaMobileAlt style={{ fontSize: "15px" }} />
-            {getPersonalDetails ? <p>{getPersonalDetails.mobileno}</p> : <p></p>}
+            {getPersonalDetails ? (
+              <p>{getPersonalDetails.mobileno}</p>
+            ) : (
+              <p></p>
+            )}
           </div>
         </div>
       </div>

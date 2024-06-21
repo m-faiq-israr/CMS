@@ -12,10 +12,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import MyImage from "../assets/myImg1.jpg";
 import { useStateContext } from "../context/ContextProvider";
-
+import { useAuth } from "../Firebase/AuthContext";
 const ProfileCard = () => {
   const { getCredentials, getPersonalDetails } = useStateContext();
- 
+  const {user} = useAuth();
 
   const showToast = () => {
     toast.success("CV Downloaded", {
@@ -25,7 +25,6 @@ const ProfileCard = () => {
       pauseOnFocusLoss: false,
       className: "bg-green-400 text-white rounded-3xl font-poppins font-bold ",
     });
-
   };
   return (
     <div className="relative">
@@ -86,12 +85,16 @@ const ProfileCard = () => {
 
             <div className="flex justify-start items-center space-x-2">
               <TfiEmail style={{ fontSize: "15px" }} />
-              {getCredentials ? <p>{getCredentials.email}</p> : <p></p>}
+              {user ? <p>{user.email}</p> : <p></p>}
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <FaMobileAlt style={{ fontSize: "15px" }} />
-              {getPersonalDetails ? <p>{getPersonalDetails.mobileno}</p> : <p></p>}
+              {getPersonalDetails ? (
+                <p>{getPersonalDetails.mobileno}</p>
+              ) : (
+                <p></p>
+              )}
             </div>
 
             {/* <div className="flex justify-start items-center space-x-2">

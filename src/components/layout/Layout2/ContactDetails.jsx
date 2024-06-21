@@ -5,16 +5,17 @@ import { IoLocationSharp } from "react-icons/io5";
 import { FaMobile } from "react-icons/fa";
 import { BsLinkedin } from "react-icons/bs";
 import { useStateContext } from "../../../context/ContextProvider";
-
+import { useAuth } from '../../../Firebase/AuthContext';
 
 const ContactDetails = ({ linkedIn}) => {
-    const { getCredentials, getPersonalDetails } = useStateContext();
+  const {user} = useAuth();
+    const { getCredentials, getPersonalDetails} = useStateContext();
 
   return (
     <div className="font-poppins bg-gray-800 text-gray-200 py-5 pl-12 rounded-lg grid grid-cols-2 gap-x-24 gap-y-4 mt-4">
       <div className="flex items-center gap-2">
         <MdLocalPostOffice />
-        {getCredentials ? <p>{getCredentials.email}</p> : <p></p>}
+        {user ? <p>{user.email}</p> : <p></p>}
       </div>
 
       <div className="flex items-center gap-2">
@@ -27,8 +28,11 @@ const ContactDetails = ({ linkedIn}) => {
       </div>
       <div className="flex items-center gap-2">
         <BsLinkedin />
-        {getPersonalDetails ? <p>{`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}</p> : <p></p>}
-       
+        {getPersonalDetails ? (
+          <p>{`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}</p>
+        ) : (
+          <p></p>
+        )}
       </div>
     </div>
   );

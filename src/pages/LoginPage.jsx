@@ -17,7 +17,9 @@ import {
 import auth from "../Firebase/firebase";
 
 const LoginPage = () => {
+  const {setuserEmail} = useStateContext();
   const navigate = useNavigate();
+  
 
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
@@ -30,6 +32,7 @@ const LoginPage = () => {
     signInWithEmailAndPassword(auth, credentials.email, credentials.password)
       .then((userCredential) => {
         const user = userCredential.user;
+
         navigate("/");
       })
       .catch((error) => {
@@ -45,55 +48,30 @@ const LoginPage = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
         const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
         navigate("/");
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
         console.log(credential);
       });
   };
 
   const facebookLogin = () => {
     const provider = new FacebookAuthProvider();
-
     signInWithPopup(auth, provider)
       .then((result) => {
-        // The signed-in user info.
         const user = result.user;
-
-        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
+
         navigate("/");
-
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
       })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = FacebookAuthProvider.credentialFromError(error);
+      .catch((error) => { 
+       const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(error.message);
-
-        // ...
       });
   };
   return (
@@ -113,7 +91,7 @@ const LoginPage = () => {
             <p className=" text-sm text-gray-600 dark:text-gray-200 pl-1 ">
               Don't have an account?{" "}
               <Link
-                to="/register"
+                to="/signup"
                 className="text-blue-600 font-semibold dark:text-blue-400 transition duration-100 hover:text-blue-700 "
               >
                 Sign up
@@ -153,22 +131,10 @@ const LoginPage = () => {
               />
             </div>
 
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  className="rounded-xl cursor-pointer "
-                  id="remember"
-                />
-                <label
-                  className="text-sm font-semibold text-gray-700 cursor-pointer"
-                  htmlFor="remember"
-                >
-                  Remember me
-                </label>
-              </div>
+            <div className="flex justify-end items-center">
+              
               <Link
-                to={"/"}
+                to={"/login"}
                 className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold "
               >
                 Forgot password?

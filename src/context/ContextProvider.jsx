@@ -7,21 +7,14 @@ import { ToastContainer, toast } from "react-toastify";
 const StateContext = createContext();
 
 export const ContextProvider = ({ children }) => {
-  
+
+
+ 
 
   const [skillCard, setskillCard] = useState("");
 
   const [selectLayoutButton, setSelectLayoutButton] = useState(false);
 
-  // const downloadPdf = () => {
-  //   const path = "../assets/FAIQ RESUME UPDATED.pdf";
-  //   const link = document.createElement("a");
-  //   link.href = path;
-  //   link.download = "resume.pdf";
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // };
 
   const downloadPDF = () => {
     const pdfPath = "../assets/FAIQ RESUME UPDATED.pdf";
@@ -123,11 +116,7 @@ export const ContextProvider = ({ children }) => {
     });
   };
 
-  // const storedImage = localStorage.getItem("profilePicture");
-  // const [myImage, setMyImage] = useState(
-  //   storedImage ? JSON.parse(storedImage) : ""
-  // );
-
+ 
   return (
     <StateContext.Provider
       value={{
@@ -159,6 +148,7 @@ export const ContextProvider = ({ children }) => {
         showToast,
         personalDetails,
         setpersonalDetails,
+        
      
       }}
     >
