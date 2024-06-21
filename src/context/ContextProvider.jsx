@@ -6,11 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 const StateContext = createContext();
 
 export const ContextProvider = ({ children }) => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
-
-  const onChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
+  
 
   const [skillCard, setskillCard] = useState("");
 
@@ -134,9 +130,6 @@ export const ContextProvider = ({ children }) => {
   return (
     <StateContext.Provider
       value={{
-        credentials,
-        setCredentials,
-        onChange,
         skillCard,
         setskillCard,
         downloadPDF,

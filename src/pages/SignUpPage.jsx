@@ -1,31 +1,68 @@
-import React from 'react'
+import React, { useState } from 'react'
 import InputField from '../components/InputField';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStateContext } from "../context/ContextProvider";
+import AuthButton from '../AuthButton';
+import Divider from '../components/Divider';
+import AuthProviderButton from '../components/AuthProviderButton';
+import { FaFacebookSquare } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import ThemeToggle from '../components/ThemeToggle';
+import {  createUserWithEmailAndPassword } from "firebase/auth";
+import auth from "../firebase";
+
+
 
 const SignUpPage = () => {
-    const { onChange, credentials } = useStateContext();
+  
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-     const handleSubmit = () => {
 
-      
-      localStorage.setItem('credentials', JSON.stringify(credentials));
-       navigate("/admin");
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+
+  const onChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
+
+     const handleSubmit = (e) => {      
+      e.preventDefault();
+      createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate("/admin");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(error.message);
+          console.log(errorMessage);
+        });
      };
    return (
-     <div className="  bg-indigo-100 dark:bg-gray-800 py-6 sm:py-8 lg:py-12 bg-cover h-screen ">
-       <div className="mx-auto max-w-screen-2xl px-4 md:px-8 ">
-         <h2 className="mb-4 text-center text-2xl font-bold text-gray-700 dark:text-white md:mb-10  font-poppins mt-10">
-           Create an Account
-         </h2>
-
+     <div className="  bg-indigo-100 dark:bg-gray-800 h-screen pt-8 font-poppins ">
+       <div className={` absolute right-2 top-1 `}>
+         <ThemeToggle />
+       </div>
+       <div className=" ">
          <form
-           className="mx-auto max-w-md rounded-3xl border dark:border-gray-600 shadow-sm bg-white dark:bg-gray-700 overflow-hidden"
+           className="mx-auto max-w-lg pb-5 rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden"
            onSubmit={handleSubmit}
          >
-           <div className="flex flex-col gap-8 p-10">
-             
+           <div className="px-10 pt-7">
+             <h1 className="text-3xl font-bold text-gray-700 dark:text-white">
+               Create an account
+             </h1>
+             <p className=" text-sm text-gray-600 dark:text-gray-200 pl-1 ">
+               Already have an account?{" "}
+               <Link
+                 to="/"
+                 className="text-blue-600 font-semibold dark:text-blue-400 transition duration-100 hover:text-blue-700 active:text-indigo-700"
+               >
+                 Sign in
+               </Link>
+             </p>
+           </div>
+           <div className="flex flex-col gap-4 px-10 py-4">
              <div>
                <label
                  htmlFor="email"
@@ -57,22 +94,24 @@ const SignUpPage = () => {
                  width={"full"}
                />
              </div>
-
-             <button className=" rounded-3xl bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white outline-none   hover:bg-blue-700 focus-visible:ring  md:text-base font-poppins mt-3 w-44  self-center">
-               Signup
-             </button>
-           </div>
-
-           <div className="flex items-center justify-center bg-white dark:bg-gray-600 p-4">
-             <p className="text-center text-sm text-gray-600 dark:text-white font-poppins ">
-               Already have an account?{" "}
-               <Link
-                 to="/"
-                 className="text-indigo-500 dark:text-indigo-300 transition duration-100 hover:text-indigo-600 active:text-indigo-700"
-               >
-                 Login
-               </Link>
-             </p>
+             <AuthButton name={"Create an account"} />
+             <div>
+               <Divider />
+             </div>
+             <div className=" space-y-3">
+               <AuthProviderButton
+                 name={"Sign up with Google"}
+                 icon={<FcGoogle size={"22px"} />}
+                 color={"bg-gray-200"}
+                 hoverColor={"bg-gray-300"}
+               />
+               <AuthProviderButton
+                 name={"Sign up with Facebook"}
+                 icon={<FaFacebookSquare />}
+                 color={"bg-blue-500"}
+                 hoverColor={"bg-blue-600"}
+               />
+             </div>
            </div>
          </form>
        </div>

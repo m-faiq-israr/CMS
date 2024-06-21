@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
+import { TbLogout2 } from "react-icons/tb";
 
 const LogoutButton = () => {
   const navigate = useNavigate();
@@ -41,9 +42,10 @@ const LogoutButton = () => {
   };
   return (
     <div
-      className=" font-poppins font-bold  rounded-xl py-2 px-24  flex items-center justify-center bg-red-600 hover:bg-red-700 text-white hover:cursor-pointer select-none "
+      className=" font-poppins font-semibold  rounded-xl py-2   flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white hover:cursor-pointer select-none "
       onClick={logOut}
     >
+      <TbLogout2  size={'20px'} />
       <h1 className="">Log out</h1>
     </div>
   );

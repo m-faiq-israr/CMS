@@ -52,9 +52,9 @@ const SkillSection = () => {
           <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
 
           <div className="my-4 flex justify-between">
-            <AddFieldButton name={"Add Skills Tab"} onClick={addInputField} />
+            <AddFieldButton name={"Add Skills"} onClick={addInputField} />
             <RemoveFieldButton
-              name={"Remove Skills Tab"}
+              name={"Remove Skill"}
               onClick={removeInputField}
             />
           </div>
@@ -72,7 +72,7 @@ const SkillSection = () => {
             ))}
           </div>
 
-          <InputButton type={"submit"} name={"Add Skills"} />
+          <InputButton type={"submit"} name={"Save"} />
         </form>
       </div>
       <ToastContainer position="bottom-center" />
