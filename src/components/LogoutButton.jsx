@@ -2,12 +2,16 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 import { TbLogout2 } from "react-icons/tb";
-
+import auth from '../Firebase/firebase'
+import { useAuth } from "../Firebase/AuthContext";
 const LogoutButton = () => {
   const navigate = useNavigate();
   const { setCredentials, setInputs } = useStateContext();
+   const {  logout } = useAuth();
   const logOut = () => {
-    navigate("/");
+    logout();
+   
+    navigate("/login");
     setCredentials({ email: "", password: "" });
     const updatedData = [
       { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },

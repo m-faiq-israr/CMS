@@ -12,14 +12,12 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
 } from "firebase/auth";
-import auth from '../firebase'
-
+import auth from "../Firebase/firebase";
 
 const LoginPage = () => {
-
   const navigate = useNavigate();
-
 
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
@@ -27,52 +25,77 @@ const LoginPage = () => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, credentials.email, credentials.password)
-      .then((userCredential) => {   
+      .then((userCredential) => {
         const user = userCredential.user;
-        navigate("/admin");
+        navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-                navigate("/");
+        navigate("/");
 
         console.log(error);
       });
-
-
-    
   };
 
-  const googleLogin = () =>{
+  const googleLogin = () => {
     const provider = new GoogleAuthProvider();
-signInWithPopup(auth, provider)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-            navigate("/admin");
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+        navigate("/");
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+        console.log(credential);
+      });
+  };
 
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-    console.log(credential);
-  });
-  }
+  const facebookLogin = () => {
+    const provider = new FacebookAuthProvider();
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // The signed-in user info.
+        const user = result.user;
+
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const accessToken = credential.accessToken;
+        navigate("/");
+
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+        console.log(error.message);
+
+        // ...
+      });
+  };
   return (
     <div className="  bg-indigo-100 dark:bg-gray-800 h-screen pt-8 ">
       <div className={` absolute right-2 top-1 `}>
@@ -158,17 +181,18 @@ signInWithPopup(auth, provider)
             </div>
             <div className=" space-y-3">
               <AuthProviderButton
-                name={"Sign in with Google"}
+                name={"Continue with Google"}
                 icon={<FcGoogle size={"22px"} />}
                 color={"bg-gray-200"}
                 hoverColor={"bg-gray-300"}
                 onClick={googleLogin}
               />
               <AuthProviderButton
-                name={"Sign in with Facebook"}
+                name={"Continue with Facebook"}
                 icon={<FaFacebookSquare />}
                 color={"bg-blue-500"}
                 hoverColor={"bg-blue-600"}
+                onClick={facebookLogin}
               />
             </div>
           </div>
