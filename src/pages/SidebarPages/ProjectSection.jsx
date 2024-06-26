@@ -3,11 +3,19 @@ import { useStateContext } from "../../context/ContextProvider";
 import AddFieldButton from '../../components/SideBarComponents/AddFieldButton';
 import AddProjectBox from '../../components/SideBarComponents/AddProjectBox';
 import InputButton from '../../components/SideBarComponents/InputButton';
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
+import { useAuth } from "../../Firebase/AuthContext";
+import { Toaster, toast } from "react-hot-toast";
+
 const ProjectSection = () => {
-  const { openSidebar, projectInput, setprojectInput, showToast } =
-    useStateContext();
+
+  const { user } = useAuth();
+
+  const { openSidebar, projectInput, setprojectInput } = useStateContext();
+
+  
 
    const addProjectField = () => {
      setprojectInput((prevInputs) => [
@@ -25,7 +33,7 @@ const ProjectSection = () => {
      }
    };
 
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
      e.preventDefault();
      const projectData = projectInput.map((input) => {
        const { projectTitle, techUsed, point1 } = input;
@@ -35,9 +43,25 @@ const ProjectSection = () => {
          point1
        };
      });
+
+     if(!user){
+      console.log('User not authenticated');
+      return;
+     }
+     try{
+      const docRef = await addDoc(collection(db, "Project Details"), {
+        id: user.uid,
+        projectData
+      });
+      console.log('Document written with id: ', docRef.id);
+      toast.success('Project Details Added');
+
+     }catch(e){
+      console.log(e);
+      toast.error(e);
+     }
      localStorage.setItem("projectData", JSON.stringify(projectData));
      setprojectInput([{ projectTitle: "", techUsed: "", point1: "" }]);
-     showToast("Projects Added Succesfully");
    };
   
   return (
@@ -66,8 +90,8 @@ const ProjectSection = () => {
           ))}
           <InputButton type={"submit"} name={"Save"} />
         </form>
+        <Toaster/>
       </div>
-      <ToastContainer position="bottom-center" />
     </div>
   );
 }

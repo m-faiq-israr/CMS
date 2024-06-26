@@ -1,5 +1,4 @@
 import React from 'react'
-import { IoMdAdd } from 'react-icons/io';
 import { MdAdd } from 'react-icons/md';
 
 const AddFieldButton = ({name, onClick}) => {

@@ -3,30 +3,17 @@ import InputDetails from "../../components/SideBarComponents/InputDetails";
 import InputButton from "../../components/SideBarComponents/InputButton";
 import TextArea from "../../components/SideBarComponents/TextArea";
 import { useStateContext } from "../../context/ContextProvider";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { collection, addDoc} from "firebase/firestore";
+import {db} from '../../Firebase/firebase'
+import { useAuth } from "../../Firebase/AuthContext";
+import { Toaster, toast } from "react-hot-toast";
 
 const PersonalDetails = () => {
-  const { openSidebar, showToast, personalDetails, setpersonalDetails } =
-    useStateContext();
-  
-  const onChange = (e) =>{
-    setpersonalDetails({...personalDetails, [e.target.name]:e.target.value});
-  }
+  const {user} = useAuth();
 
-    const [profilePicture, setProfilePicture] = useState(null);
+  const { openSidebar} = useStateContext();
 
-    // Function to handle file input change
-    const handleFileChange = (event) => {
-      const file = event.target.files[0]; // Get the first file from the input
-      setProfilePicture(file); // Set the file in state
-    };
-
-
-  const handleSubmit = (e) =>{
-    e.preventDefault();
-    localStorage.setItem('personalDetails', JSON.stringify(personalDetails));
-    setpersonalDetails({
+    const [personalDetails, setpersonalDetails] = useState({
       fname: "",
       lname: "",
       profession: "",
@@ -35,10 +22,48 @@ const PersonalDetails = () => {
       dob: "",
       aboutme: "",
     });
-    localStorage.setItem("profilePicture", JSON.stringify(profilePicture));
-    showToast('Details Successfully Added');
-
     
+    const [profilePicture, setProfilePicture] = useState(null);
+    
+    const handleFileChange = (event) => {
+      const file = event.target.files[0]; // Get the first file from the input
+      setProfilePicture(file); // Set the file in state
+    };
+    
+    
+    const onChange = (e) =>{
+      setpersonalDetails({...personalDetails, [e.target.name]:e.target.value});
+    }
+
+
+  const handleSubmit = async (e) =>{
+    e.preventDefault();
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+    try {
+      const docRef = await addDoc(collection(db, "Personal Details"), {
+        id:user.uid,
+        ...personalDetails
+      });
+      console.log("Document written with ID: ", docRef.id);
+      toast.success('Personal Details Added Successfully')
+      
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      toast.error(e)
+    }
+    
+    setpersonalDetails({
+      fname: "",
+      lname: "",
+      profession: "",
+      location: "",
+      mobileno: "",
+      dob: "",
+      aboutme: "",
+    });   
   }
   return (
     <div
@@ -131,28 +156,7 @@ const PersonalDetails = () => {
                 />
               </div>
             </div>
-            {/* <div className="mt-4  space-y-4">
-              <InputDetails
-                heading={"Github Account"}
-                htmlFor={"github"}
-                name={"github"}
-                value={personalDetails.github}
-                type={"text"}
-                placeholder={"Enter your Github Account Link"}
-                width={"full"}
-                onChange={onChange}
-              />
-              <InputDetails
-                heading={"LinkedIn Account"}
-                htmlFor={"linkedin"}
-                name={"linkedin"}
-                value={personalDetails.linkedin}
-                type={"text"}
-                placeholder={"Enter your LinkedIn Account Link"}
-                width={"full"}
-                onChange={onChange}
-              />
-            </div> */}
+           
             <div className="mt-4  flex flex-col ">
               <label
                 className="font-semibold text-lg ml-2 text-gray-600 dark:text-gray-200"
@@ -174,7 +178,7 @@ const PersonalDetails = () => {
                 Upload Picture
               </label>
               <input
-                className="bg-gray-100 cursor-pointer"
+                className="bg-gray-100 cursor-pointer dark:bg-gray-600 dark:text-gray-200"
                 type="file"
                 id="profilePicture"
                 name="profilePicture"
@@ -193,8 +197,9 @@ const PersonalDetails = () => {
             </div>
           </div>
         </form>
+        <Toaster/>
       </div>
-      <ToastContainer position="bottom-center" />
+     
     </div>
   );
 };

@@ -7,7 +7,7 @@ const Button = ({bgColor, hoverColor}) => {
   return (
     <button
       className={ `bg-${bgColor}  w-44 h-12 flex items-center justify-center text-white rounded-2xl hover:bg-${hoverColor} hover:cursor-pointer select-none  font-poppins  `}
-      onClick={downloadPDF}
+      
     >
       <HiOutlineDownload
         className=" mr-1"

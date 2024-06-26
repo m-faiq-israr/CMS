@@ -14,11 +14,14 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
-import auth from "../Firebase/firebase";
+import {auth} from "../Firebase/firebase";
+import { Toaster, toast } from "react-hot-toast";
 
 const LoginPage = () => {
   const {setuserEmail} = useStateContext();
   const navigate = useNavigate();
+
+  
   
 
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -34,11 +37,17 @@ const LoginPage = () => {
         const user = userCredential.user;
 
         navigate("/");
+        toast.success("Login Successful");
+
+
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        navigate("/");
+        toast.error('Incorrect email or password');
+      
+        
+
 
         console.log(error);
       });
@@ -52,10 +61,14 @@ const LoginPage = () => {
         const token = credential.accessToken;
         const user = result.user;
         navigate("/");
+        toast.success("Login Successful");
+
       })
       .catch((error) => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log(credential);
+        toast.error(`Error: ${error.message}`);
+
       });
   };
 
@@ -66,12 +79,16 @@ const LoginPage = () => {
         const user = result.user;
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
-
+        
         navigate("/");
+        toast.success('Login Successful');
       })
       .catch((error) => { 
        const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(error.message);
+        toast.error(`Error: ${error.message}`);
+
+
       });
   };
   return (
@@ -163,6 +180,7 @@ const LoginPage = () => {
             </div>
           </div>
         </form>
+        <Toaster/>
       </div>
     </div>
   );

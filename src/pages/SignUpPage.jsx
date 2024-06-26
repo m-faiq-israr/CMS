@@ -17,7 +17,7 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
-import auth from "../Firebase/firebase";
+import {auth} from "../Firebase/firebase";
 
 const SignUpPage = () => {
   const {setuserEmail} = useStateContext();

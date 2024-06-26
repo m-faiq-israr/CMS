@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../context/ContextProvider";
 import { TbLogout2 } from "react-icons/tb";
-import auth from '../Firebase/firebase'
 import { useAuth } from "../Firebase/AuthContext";
 const LogoutButton = () => {
   const navigate = useNavigate();

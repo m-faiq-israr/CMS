@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import InputDetails from './InputDetails';
 import RemoveFieldButton from './RemoveFieldButton';
 import { useStateContext } from '../../context/ContextProvider';
 const AddEducationBox = ({index, value, onClick}) => {
+   
+    
     const {handleChange} = useStateContext();
   return (
     <div className="bg-gray-50 dark:bg-gray-600 p-8 rounded-xl">
@@ -60,9 +62,9 @@ const AddEducationBox = ({index, value, onClick}) => {
           />
         </div>
       </div>
-    
-        <div className="pt-7 flex justify-end">
-          <RemoveFieldButton name={"Remove "} onClick={onClick} />
+
+      <div className="pt-7 flex justify-end">
+        <RemoveFieldButton name={"Remove "} onClick={onClick} />
       </div>
     </div>
   );

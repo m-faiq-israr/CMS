@@ -7,12 +7,14 @@ import { useAuth } from '../../Firebase/AuthContext';
 const SideProfileComp = () => {
     const {
       openSidebar,
-      setopenSidebar,
-      getCredentials,
-      getPersonalDetails,
-      userEmail
- 
+
+      
+      getPersonalDetailsData,
     } = useStateContext();
+
+    
+   
+    
     const {user} = useAuth();
     
   return (
@@ -22,7 +24,6 @@ const SideProfileComp = () => {
           <div className="">
             <div className="flex items-center gap-3 pt-4 px-3 pb-3 duration-300 ">
               <div className=" rounded-full h-16 w-16  duration-300   ">
-                
                 <img
                   className="w-full h-full object-cover rounded-full "
                   src={userPic}
@@ -30,8 +31,8 @@ const SideProfileComp = () => {
                 />
               </div>
               <div className=" font-poppins duration-300 ">
-                {getPersonalDetails ? (
-                  <h1 className="font-bold text-xl text-gray-800 dark:text-white">{`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}</h1>
+                {getPersonalDetailsData ? (
+                  <h1 className="font-bold text-xl text-gray-800 dark:text-white">{`${getPersonalDetailsData[0].fname} ${getPersonalDetailsData[0].lname}`}</h1>
                 ) : (
                   <h1 className="font-bold text-xl text-gray-800 dark:text-white">
                     User

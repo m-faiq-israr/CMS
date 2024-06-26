@@ -2,13 +2,14 @@ import React from 'react'
 import EducationComponent from './EducationComponent';
 import { useStateContext } from '../context/ContextProvider';
 const EducationSection = () => {
-  const {storedEducationData} = useStateContext();
-  console.log(storedEducationData);
+  const {  getEducationData } = useStateContext();
+
+  
   return (
     <>
-      {storedEducationData ? (
+      {getEducationData ? (
         <div>
-          {storedEducationData.map((education, index) => (
+          {getEducationData.map((education, index) => (
             <EducationComponent
               key={index}
               InstitueName={education.institute}

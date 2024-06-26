@@ -4,37 +4,57 @@ import InputButton from '../../components/SideBarComponents/InputButton';
 import InputField from '../../components/InputField';
 import AddFieldButton from '../../components/SideBarComponents/AddFieldButton';
 import RemoveFieldButton from '../../components/SideBarComponents/RemoveFieldButton';
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+import { ImCross } from 'react-icons/im';
+import { TiMinus } from 'react-icons/ti';
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
+import { useAuth } from "../../Firebase/AuthContext";
+import { Toaster, toast } from "react-hot-toast";
+
+
 const SkillSection = () => {
-  const { openSidebar, showToast } = useStateContext();
-  const [inputs, setinputs] = useState(['']);
+  const { openSidebar } = useStateContext();
+  const [skills, setSkills] = useState(['']);
+  const { user } = useAuth();
 
   //function to handle changes in input fields
-  const handleChange = (index, value) =>{
-    const updatedInputs = [...inputs];
-    updatedInputs[index] = value;
-    setinputs(updatedInputs);
-  }
+  const handleChange = (index, value) => {
+    const updatedSkills = [...skills];
+    updatedSkills[index] = value;
+    setSkills(updatedSkills);
+  };
 
   const addInputField = () =>{
-    setinputs([...inputs, ''])
+    // setinputs([...inputs, ''])
+    setSkills((prevInputs)=>[...prevInputs, '']);
     
   }
 
-  const removeInputField = (index) => {
-    if (inputs.length > 1) {
-      const updatedInputs = [...inputs];
-      updatedInputs.pop();
-      setinputs(updatedInputs);
-    }
-  };
+const removeInputField = (index) => {
+  if (skills.length > 1) {
+    setSkills((prevInputs) => prevInputs.filter((_, i) => i !== index));
+  }
+};
 
-  const handleSubmit = (e) =>{
-    e.preventDefault();
-    localStorage.setItem('skills', JSON.stringify(inputs))
-    setinputs(['']);
-    showToast('Skills Added Succesfully');
+  const handleSubmit = async (e) =>{
+     e.preventDefault();
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+    try {
+      const docRef = await addDoc(collection(db, "Skills"), {
+        id:user.uid,
+        skills
+      });
+      console.log("Document written with ID: ", docRef.id);
+      toast.success('Skills Added Successfully')
+      
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      toast.error(e)
+    }
+    setSkills(['']);
     
   }
   
@@ -53,29 +73,39 @@ const SkillSection = () => {
 
           <div className="my-4 flex justify-between">
             <AddFieldButton name={"Add Skills"} onClick={addInputField} />
-            <RemoveFieldButton
+            {/* <RemoveFieldButton
               name={"Remove Skill"}
               onClick={removeInputField}
-            />
+            /> */}
           </div>
-          <div className="grid grid-cols-3 gap-x-8 gap-y-6 mb-10 ">
-            {inputs.map((input, index) => (
-              <div key={index} className="w-[17rem]">
-                <InputField
-                  type={"text"}
-                  value={input}
-                  width={"full"}
-                  placeholder={`Enter Skill ${index + 1}`}
-                  onChange={(e) => handleChange(index, e.target.value)}
-                />
+          <div className="grid grid-cols-3 gap-x-8 gap-y-10 mb-10 ">
+            {skills.map((skill, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div className="w-[17rem]">
+                  <InputField
+                    type={"text"}
+                    value={skill}
+                    width={"full"}
+                    placeholder={`Enter Skill ${index + 1}`}
+                    onChange={(e) => handleChange(index, e.target.value)}
+                  />
+                </div>
+                <div className="bg-red-500 hover:bg-red-600 rounded-full px-1 py-1 flex items-center justify-center ">
+                  <button
+                    onClick={() => removeInputField(index)}
+                    className="text-white"
+                  >
+                    <TiMinus />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
 
           <InputButton type={"submit"} name={"Save"} />
         </form>
+        <Toaster/>
       </div>
-      <ToastContainer position="bottom-center" />
     </div>
   );
 }

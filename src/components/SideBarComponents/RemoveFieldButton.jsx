@@ -4,8 +4,8 @@ import { MdDelete } from 'react-icons/md';
 
 
 const RemoveFieldButton = ({name, onClick}) => {
-  const {inputs} = useStateContext();
-  const disableButton = inputs.length <= 1;
+
+
   
   return (
     <div>

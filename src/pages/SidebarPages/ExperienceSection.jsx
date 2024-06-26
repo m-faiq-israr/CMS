@@ -3,9 +3,14 @@ import { useStateContext } from "../../context/ContextProvider";
 import AddExperienceBox from '../../components/SideBarComponents/AddExperienceBox';
 import AddFieldButton from '../../components/SideBarComponents/AddFieldButton';
 import InputButton from '../../components/SideBarComponents/InputButton';
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
+import { useAuth } from "../../Firebase/AuthContext";
+import { Toaster, toast } from "react-hot-toast";
+
 const ExperienceSection = () => {
+  const {user} = useAuth();
   const { openSidebar, experienceInput, setexperienceInput, showToast } =
     useStateContext();
 
@@ -37,7 +42,7 @@ const ExperienceSection = () => {
       }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       const experienceData = experienceInput.map((input) => {
         const {
@@ -61,6 +66,28 @@ const ExperienceSection = () => {
           location
         };
       });
+
+      if(!user){
+        console.log('User not authenticated');
+        return;
+      }
+
+      try{
+        const docRef = await addDoc(collection(db, "Experience Details"), {
+          id: user.uid,
+          experienceData,
+        });
+      console.log("Document written with ID: ", docRef.id);
+        toast.success('Experience Added Successfully')
+
+      }catch(e){
+        console.log(e);
+        toast.error(e);
+      }
+
+      
+
+
       localStorage.setItem("experienceData", JSON.stringify(experienceData));
       setexperienceInput([
         {
@@ -74,7 +101,6 @@ const ExperienceSection = () => {
           location: ""
         },
       ]);
-      showToast("Experience Added Succesfully");
     };
 
   return (
@@ -106,8 +132,8 @@ const ExperienceSection = () => {
           ))}
           <InputButton type={"submit"} name={"Save"} />
         </form>
+        <Toaster/>
       </div>
-      <ToastContainer position="bottom-center" />
     </div>
   );
 }

@@ -8,13 +8,12 @@ import { SiSkypeforbusiness } from "react-icons/si";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
 import MyImage from "../assets/myImg1.jpg";
 import { useStateContext } from "../context/ContextProvider";
 import { useAuth } from "../Firebase/AuthContext";
 const ProfileCard = () => {
-  const { getCredentials, getPersonalDetails } = useStateContext();
+  const { getCredentials, getPersonalDetails, getPersonalDetailsData } =
+    useStateContext();
   const {user} = useAuth();
 
   const showToast = () => {
@@ -43,16 +42,16 @@ const ProfileCard = () => {
           style={{ height: "45%" }}
           className="mt-24 space-y-2 flex flex-col items-center justify-center -ml-"
         >
-          {getPersonalDetails ? (
+          {getPersonalDetailsData ? (
             <h1 className="text-3xl font-bold text-gray-700 dark:text-white pb-2 text-center">
-              {`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}
+              {`${getPersonalDetailsData[0].fname} ${getPersonalDetailsData[0].lname}`}
             </h1>
           ) : (
             <h1></h1>
           )}
           <div className="flex items-center justify-center bg-gray-200  py-1 px-4 text-center rounded-full text-sm text-gray-500 dark:text-gray-900 ">
-            {getPersonalDetails ? (
-              <h3>{getPersonalDetails.profession}</h3>
+            {getPersonalDetailsData ? (
+              <h3>{getPersonalDetailsData[0].profession}</h3>
             ) : (
               <h3></h3>
             )}
@@ -71,13 +70,17 @@ const ProfileCard = () => {
           <div className="pl-6 text-gray-500 dark:text-gray-300 text-sm space-y-3">
             <div className="flex justify-start items-center space-x-2">
               <IoCalendarOutline />
-              {getPersonalDetails ? <p>{getPersonalDetails.dob}</p> : <p></p>}
+              {getPersonalDetailsData ? (
+                <p>{getPersonalDetailsData[0].dob}</p>
+              ) : (
+                <p></p>
+              )}
             </div>
 
             <div className="flex justify-start items-center space-x-2">
               <GoLocation style={{ fontSize: "15px" }} />
-              {getPersonalDetails ? (
-                <p>{getPersonalDetails.location}</p>
+              {getPersonalDetailsData ? (
+                <p>{getPersonalDetailsData[0].location}</p>
               ) : (
                 <p></p>
               )}
@@ -90,8 +93,8 @@ const ProfileCard = () => {
 
             <div className="flex justify-start items-center space-x-2">
               <FaMobileAlt style={{ fontSize: "15px" }} />
-              {getPersonalDetails ? (
-                <p>{getPersonalDetails.mobileno}</p>
+              {getPersonalDetailsData ? (
+                <p>{getPersonalDetailsData[0].mobileno}</p>
               ) : (
                 <p></p>
               )}
@@ -105,10 +108,8 @@ const ProfileCard = () => {
           </div>
           <div
             className="flex items-center justify-center pt-4"
-            onClick={showToast}
           >
             <Button bgColor={"blue-600"} hoverColor={"blue-700"} />
-            <ToastContainer position="bottom-center" />
           </div>
         </div>
       </div>

@@ -9,7 +9,8 @@ import { useAuth } from '../../../Firebase/AuthContext';
 
 const ContactDetails = ({ linkedIn}) => {
   const {user} = useAuth();
-    const { getCredentials, getPersonalDetails} = useStateContext();
+    const {  getPersonalDetailsData } =
+      useStateContext();
 
   return (
     <div className="font-poppins bg-gray-800 text-gray-200 py-5 pl-12 rounded-lg grid grid-cols-2 gap-x-24 gap-y-4 mt-4">
@@ -20,16 +21,24 @@ const ContactDetails = ({ linkedIn}) => {
 
       <div className="flex items-center gap-2">
         <FaMobile />
-        {getPersonalDetails ? <p>{getPersonalDetails.mobileno}</p> : <p></p>}
+        {getPersonalDetailsData ? (
+          <p>{getPersonalDetailsData[0].mobileno}</p>
+        ) : (
+          <p></p>
+        )}
       </div>
       <div className="flex items-center gap-2">
         <IoLocationSharp />
-        {getPersonalDetails ? <p>{getPersonalDetails.location}</p> : <p></p>}
+        {getPersonalDetailsData ? (
+          <p>{getPersonalDetailsData[0].location}</p>
+        ) : (
+          <p></p>
+        )}
       </div>
       <div className="flex items-center gap-2">
         <BsLinkedin />
-        {getPersonalDetails ? (
-          <p>{`${getPersonalDetails.fname} ${getPersonalDetails.lname}`}</p>
+        {getPersonalDetailsData ? (
+          <p>{`${getPersonalDetailsData[0].fname} ${getPersonalDetailsData[0].lname}`}</p>
         ) : (
           <p></p>
         )}

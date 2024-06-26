@@ -1,10 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { FaArrowLeft } from "react-icons/fa";
 import SideProfileComp from './SideBarComponents/SideProfileComp';
 import { useStateContext } from '../context/ContextProvider';
 import SidebarMenuIcon from './SideBarComponents/SidebarMenuIcon';
 import SidebarTab from './SideBarComponents/SidebarTab';
-import { RiHome6Line } from "react-icons/ri";
 import { GoHomeFill } from "react-icons/go";
 import { IoPersonCircle } from "react-icons/io5";
 import { FaCode } from "react-icons/fa";
@@ -13,7 +11,6 @@ import { FaLaptopCode } from "react-icons/fa";
 
 import { MdWork } from "react-icons/md";
 import LogoutButton from './LogoutButton';
-import ThemeToggle from './ThemeToggle';
 
 
 const SideBar = () => {

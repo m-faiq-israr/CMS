@@ -2,16 +2,13 @@ import React from "react";
 import MyImage from "../../../assets/myImg1.jpg";
 import { FaCodeBranch } from "react-icons/fa";
 import { RiGraduationCapFill } from "react-icons/ri";
-import { IoLanguageSharp } from "react-icons/io5";
 
 import SkillTab from "./SkillTab";
 import EducationTab from "./EducationTab";
-import LanguageTab from "./LanguageTab";
-import Button from "../../Button";
+
 import { useStateContext } from "../../../context/ContextProvider";
 const ProfileSection = () => {
-  const skills = JSON.parse(localStorage.getItem("skills"));
-  const { storedEducationData } = useStateContext();
+  const {  getEducationData, getSkills } = useStateContext();
 
   return (
     <div className=" bg-gray-800 w-[20rem]  pt-10 rounded-l-xl">
@@ -33,9 +30,9 @@ const ProfileSection = () => {
           <h1 className="text-2xl">Skills</h1>
         </div>
         <div className="mt-4">
-          {skills ? (
+          {getSkills ? (
             <>
-              {skills.map((skill, index) => (
+              {getSkills.map((skill, index) => (
                 <div key={index} className=" flex flex-col items-start ">
                   <SkillTab skillName={skill} />
                 </div>
@@ -56,9 +53,9 @@ const ProfileSection = () => {
           <h1 className="text-2xl">Education</h1>
         </div>
         <div className="mt-4">
-          {storedEducationData ? (
+          {getEducationData ? (
             <>
-              {storedEducationData.map((education, index) => (
+              {getEducationData.map((education, index) => (
                 <EducationTab
                   instituteName={education.institute}
                   degreeName={education.degree}
@@ -72,12 +69,10 @@ const ProfileSection = () => {
         </div>
       </div>
 
-     
-
       {/* download cv button */}
-      <div className="flex justify-center pt-8 pb-8">
+      {/* <div className="flex justify-center items-end pt-8 pb-8">
         <Button bgColor={"teal-700"} hoverColor={"blue-800"} />
-      </div>
+      </div> */}
     </div>
   );
 };

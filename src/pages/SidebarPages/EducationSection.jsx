@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStateContext } from "../../context/ContextProvider";
 import AddEducationBox from "../../components/SideBarComponents/AddEducationBox";
 import AddFieldButton from "../../components/SideBarComponents/AddFieldButton";
 import InputButton from "../../components/SideBarComponents/InputButton";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
+
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../Firebase/firebase";
+import { useAuth } from "../../Firebase/AuthContext";
+import { Toaster, toast } from "react-hot-toast";
+
 const EducationSection = () => {
-  const { openSidebar, inputs, setInputs, storedEducationData, showToast } =
-    useStateContext();
-  console.log(storedEducationData);
+
+  const {user} = useAuth();
+  const {inputs, setInputs} = useStateContext();
+
+   
+
+  const { openSidebar} = useStateContext();
 
   const addEducationField = () => {
     setInputs((prevInputs) => [
@@ -26,7 +34,7 @@ const EducationSection = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const educationData = inputs.map((input) => {
       const { institute, degree, startDate, endDate, cgpa } = input;
@@ -38,11 +46,31 @@ const EducationSection = () => {
         cgpa,
       };
     });
+
+    if(!user){
+      console.log('User not authenticated');
+      return;
+    }
+
+    try{
+       const docRef = await addDoc(collection(db, "Education Details"), {
+        id:user.uid,
+        educationData
+      });
+      console.log("Document written with ID: ", docRef.id);
+      toast.success('Education Added Successfully')
+
+    }catch(e){
+      console.log(e);
+      toast.error(e);
+    }
+
+
     localStorage.setItem("educationData", JSON.stringify(educationData));
     setInputs([
       { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
     ]);
-    showToast("Education Added Succesfully");
+  
   };
 
   return (
@@ -71,8 +99,8 @@ const EducationSection = () => {
           ))}
           <InputButton type={"submit"} name={"Save"} />
         </form>
+        <Toaster/>
       </div>
-      <ToastContainer position="bottom-center" />
     </div>
   );
 };

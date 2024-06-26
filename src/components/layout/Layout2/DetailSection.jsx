@@ -7,7 +7,10 @@ import ProjectComponent from './ProjectComponent';
 import { useStateContext } from '../../../context/ContextProvider';
 
 const DetailSection = () => {
-  const { storedExperienceData, storedProjectData } = useStateContext();
+  const {
+    getExperienceData,
+    getProjectData,
+  } = useStateContext();
   return (
     <div className="bg-gray-50 dark:bg-gray-100 w-[60rem] pl-10 pr-10 pt-8 rounded-r-xl">
       {/* div for about details */}
@@ -24,10 +27,9 @@ const DetailSection = () => {
           </div>
           <h1 className="text-3xl">Work Experience</h1>
         </div>
-          {storedExperienceData ? (
-            
-            <div className="mt-4">
-            {storedExperienceData.map((experience, index) => (
+        {getExperienceData ? (
+          <div className="mt-4">
+            {getExperienceData.map((experience, index) => (
               <WorkExperience
                 key={index}
                 company={experience.companyName}
@@ -40,8 +42,10 @@ const DetailSection = () => {
                 point3={experience.point3}
               />
             ))}
-        </div>
-          ) : (<div className='mt-4 mb-60'></div>)}
+          </div>
+        ) : (
+          <div className="mt-4 mb-60"></div>
+        )}
       </div>
 
       {/* project section */}
@@ -52,19 +56,18 @@ const DetailSection = () => {
           </div>
           <h1 className="text-3xl">Projects</h1>
         </div>
-        {storedProjectData ? (
-
-        <div>
-          {storedProjectData.map((project, index) => (
-            <ProjectComponent
-            key={index}
-              ProjectName={project.projectTitle}
-              techUsed={project.techUsed}
-            />
-          ))}
-        </div>
+        {getProjectData ? (
+          <div>
+            {getProjectData.map((project, index) => (
+              <ProjectComponent
+                key={index}
+                ProjectName={project.projectTitle}
+                techUsed={project.techUsed}
+              />
+            ))}
+          </div>
         ) : (
-          <div className=''></div>
+          <div className=""></div>
         )}
       </div>
     </div>

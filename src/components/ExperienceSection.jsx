@@ -2,12 +2,12 @@ import React from "react";
 import ExperienceComponent from "./ExperienceComponent";
 import { useStateContext } from "../context/ContextProvider";
 const ExperienceSection = () => {
-  const { storedExperienceData } = useStateContext();
+  const {  getExperienceData } = useStateContext();
   return (
     <>
-      {storedExperienceData ? (
+      {getExperienceData ? (
         <div>
-          {storedExperienceData.map((experience, index) => (
+          {getExperienceData.map((experience, index) => (
             <ExperienceComponent
               key={index}
               companyName={experience.companyName}

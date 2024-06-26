@@ -2,11 +2,11 @@ import React from 'react'
 import { GoDotFill } from 'react-icons/go';
 import { useStateContext } from '../../../context/ContextProvider';
 const WorkExperience = ({designation, company, startDate, endDate, location, point1, point2, point3}) => {
-  const {storedExperienceData} = useStateContext();
+  const { getExperienceData} = useStateContext();
   
   return (
     <div className="pb-4">
-      {storedExperienceData ? (
+      {getExperienceData ? (
         <>
           <div className="flex items-center gap-6 ">
             <div className="pl-1 text-teal-700 ">
@@ -41,15 +41,10 @@ const WorkExperience = ({designation, company, startDate, endDate, location, poi
             </div>
             <h1>{point3}</h1>
           </div>
-
         </>
-     
       ) : (
         <div></div>
       )}
-
-     
- 
     </div>
   );
 }

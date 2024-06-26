@@ -7,7 +7,7 @@ import HeadingComponent from "./HeadingComponent";
 import { useStateContext } from "../context/ContextProvider";
 
 const MainCard = ({roundness, AboutmeBg}) => {
-    const {  getPersonalDetails } = useStateContext();
+    const {  getPersonalDetailsData } = useStateContext();
 
   return (
     <div
@@ -17,16 +17,12 @@ const MainCard = ({roundness, AboutmeBg}) => {
       <div className="pb-[30px] px-10">
         <HeadingComponent name={"About Me"} />
         <div className=" font-poppins font-semibold text-gray-500 dark:text-gray-300 text-sm pt-4">
-          {getPersonalDetails ? (
-            <p>
-
-              {getPersonalDetails.aboutme}
-            </p>
+          {getPersonalDetailsData ? (
+            <p>{getPersonalDetailsData[0].aboutme}</p>
           ) : (
             <p className="mb-16"></p>
           )}
-          <p>
-          </p>
+          <p></p>
         </div>
       </div>
       <div className=" bg-gray-400 dark:bg-white h-[2px] rounded-full  mt-4 "></div>
@@ -35,7 +31,7 @@ const MainCard = ({roundness, AboutmeBg}) => {
       <div className=" bg-gray-50 dark:bg-gray-700 w-full px-10 font-poppins pt-2">
         <div className="mt-2">
           <HeadingComponent name={"Skills"} />
-          
+
           <SkillComponents />
         </div>
         <div className=" bg-gray-400 dark:bg-white h-[2px] rounded-full mb-2 mt-4 "></div>

@@ -12,8 +12,8 @@ function App() {
 
 
   return (
-    <ContextProvider>
       <AuthProvider>
+    <ContextProvider>
         <BrowserRouter>
           <Routes>
             <Route
@@ -36,8 +36,8 @@ function App() {
             />
           </Routes>
         </BrowserRouter>
-      </AuthProvider>
     </ContextProvider>
+      </AuthProvider>
   );
 }
 

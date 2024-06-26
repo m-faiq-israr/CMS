@@ -3,7 +3,6 @@ import lay1 from "../../assets/lay1.png";
 import lay2 from "../../assets/lay2.png";
 import lay3 from "../../assets/lay3.png";
 import "./layoutButton.css";
-import { RiH1 } from "react-icons/ri";
 const LayoutButton = ({ layoutNo }) => {
 
   const [isClicked, setisClicked] = useState(false);
