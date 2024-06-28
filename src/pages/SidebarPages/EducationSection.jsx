@@ -1,22 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStateContext } from "../../context/ContextProvider";
 import AddEducationBox from "../../components/SideBarComponents/AddEducationBox";
 import AddFieldButton from "../../components/SideBarComponents/AddFieldButton";
 import InputButton from "../../components/SideBarComponents/InputButton";
-
-import { collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+} from "firebase/firestore"; // Add 'doc' here
 import { db } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
 import { Toaster, toast } from "react-hot-toast";
 
 const EducationSection = () => {
+  const { user } = useAuth();
+  const { inputs, setInputs } = useStateContext();
+  const [docId, setDocId] = useState(null);
+  const { openSidebar } = useStateContext();
 
-  const {user} = useAuth();
-  const {inputs, setInputs} = useStateContext();
+  useEffect(() => {
+    const fetchEducationData = async () => {
+      if (user) {
+        const q = query(
+          collection(db, "Education Details"),
+          where("id", "==", user.uid)
+        );
+        const querySnapshot = await getDocs(q);
 
-   
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          const data = doc.data().educationData;
+          setInputs(data);
+          setDocId(doc.id);
+        }
+      }
+    };
 
-  const { openSidebar} = useStateContext();
+    fetchEducationData();
+  }, [user, setInputs]);
 
   const addEducationField = () => {
     setInputs((prevInputs) => [
@@ -24,6 +49,7 @@ const EducationSection = () => {
       { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
     ]);
   };
+
   const removeEducationField = (index) => {
     if (inputs.length > 1) {
       setInputs((prevInputs) => {
@@ -47,40 +73,46 @@ const EducationSection = () => {
       };
     });
 
-    if(!user){
-      console.log('User not authenticated');
+    if (!user) {
+      console.log("User not authenticated");
       return;
     }
 
-    try{
-       const docRef = await addDoc(collection(db, "Education Details"), {
-        id:user.uid,
-        educationData
-      });
-      console.log("Document written with ID: ", docRef.id);
-      toast.success('Education Added Successfully')
-
-    }catch(e){
+    try {
+      if (docId) {
+        // Update existing document
+        const docRef = doc(db, "Education Details", docId);
+        await updateDoc(docRef, { educationData });
+        toast.success("Education Details Updated");
+      } else {
+        // Add new document
+        const docRef = await addDoc(collection(db, "Education Details"), {
+          id: user.uid,
+          educationData,
+        });
+        console.log("Document written with ID: ", docRef.id);
+        toast.success("Education Added Successfully");
+        setDocId(docRef.id);
+      }
+    } catch (e) {
       console.log(e);
-      toast.error(e);
+      toast.error(e.message);
     }
 
-
-    localStorage.setItem("educationData", JSON.stringify(educationData));
-    setInputs([
-      { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
-    ]);
-  
+    // localStorage.setItem("educationData", JSON.stringify(educationData));
+    // setInputs([
+    //   { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
+    // ]);
   };
 
   return (
     <div
-      className={`  pb-10 font-poppins duration-300 w-[60rem] ${
+      className={`pb-10 font-poppins duration-300 w-[60rem] ${
         openSidebar ? "" : "mr-36"
-      } `}
+      }`}
     >
       <div className="bg-white dark:bg-gray-700 shadow-lg dark:shadow-none shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
-        <h1 className=" text-4xl font-bold text-gray-700 dark:text-gray-100">
+        <h1 className="text-4xl font-bold text-gray-700 dark:text-gray-100">
           EDUCATION SECTION
         </h1>
         <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
@@ -97,9 +129,9 @@ const EducationSection = () => {
               />
             </div>
           ))}
-          <InputButton type={"submit"} name={"Save"} />
+          <InputButton type={"submit"} name={docId ? "Update" : "Save"} />
         </form>
-        <Toaster/>
+        <Toaster />
       </div>
     </div>
   );
