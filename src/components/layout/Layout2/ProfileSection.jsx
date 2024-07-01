@@ -2,13 +2,15 @@ import React from "react";
 import MyImage from "../../../assets/myImg1.jpg";
 import { FaCodeBranch } from "react-icons/fa";
 import { RiGraduationCapFill } from "react-icons/ri";
-
+import userPic from "../../../assets/user1.png"
 import SkillTab from "./SkillTab";
 import EducationTab from "./EducationTab";
 
 import { useStateContext } from "../../../context/ContextProvider";
+import { useAuth } from "../../../Firebase/AuthContext";
 const ProfileSection = () => {
   const {  getEducationData, getSkills } = useStateContext();
+  const {userImage} = useAuth();
 
   return (
     <div className=" bg-gray-800 w-[20rem]  pt-10 rounded-l-xl">
@@ -16,7 +18,7 @@ const ProfileSection = () => {
       <div className=" rounded-full h-40 w-40 ml-20  ring-8 ring-emerald-600  ">
         <img
           className="w-full h-full object-cover rounded-full"
-          src={MyImage}
+          src={userImage ? userImage : userPic}
           alt="Picture not available"
         />
       </div>

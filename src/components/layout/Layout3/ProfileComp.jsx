@@ -7,10 +7,11 @@ import { GoLocation } from "react-icons/go";
 import { IoCalendarOutline } from "react-icons/io5";
 import { useStateContext } from "../../../context/ContextProvider";
 import { useAuth } from "../../../Firebase/AuthContext";
+import userPic from '../../../assets/user1.png'
 const ProfileComp = () => {
     const { getCredentials, getPersonalDetails, getPersonalDetailsData } =
       useStateContext();
-    const {user} = useAuth();
+    const {user, userImage} = useAuth();
 
   return (
     <div className="w-[60rem] rounded-t-2xl bg-gray-100 dark:bg-gray-900 pt-6 pb-6 px-5 flex justify-between items-center  ">
@@ -19,7 +20,7 @@ const ProfileComp = () => {
         <div className=" rounded-full h-40 w-40 ring-8 ring-blue-800   ">
           <img
             className="w-full h-full object-cover rounded-full "
-            src={MyImage}
+            src={userImage ? userImage : userPic}
             alt="Picture not available"
           />
         </div>

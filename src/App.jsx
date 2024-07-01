@@ -1,19 +1,18 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import { ContextProvider } from "./context/ContextProvider";
 import SignUpPage from "./pages/SignUpPage";
 import MainPage from "./pages/MainPage";
-import { AuthProvider, useAuth } from "./Firebase/AuthContext";
+import { AuthProvider } from "./Firebase/AuthContext";
 import PrivateRoute from "./Firebase/PrivateRoute";
+import PublicRoute from "./Firebase/PublicRoute";
 
 function App() {
-
-
   return (
-      <AuthProvider>
-    <ContextProvider>
+    <AuthProvider>
+      <ContextProvider>
         <BrowserRouter>
           <Routes>
             <Route
@@ -24,8 +23,22 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <SignUpPage />
+                </PublicRoute>
+              }
+            />
             <Route
               path="/profile"
               element={
@@ -36,8 +49,8 @@ function App() {
             />
           </Routes>
         </BrowserRouter>
-    </ContextProvider>
-      </AuthProvider>
+      </ContextProvider>
+    </AuthProvider>
   );
 }
 

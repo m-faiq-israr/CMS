@@ -55,6 +55,8 @@ export const ContextProvider = ({ children }) => {
       }
     }
 
+    
+
     //fetching the education data of user from firebase
     async function getEducationDataById() {
       try {

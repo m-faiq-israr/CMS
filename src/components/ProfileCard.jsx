@@ -9,29 +9,21 @@ import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa6";
 import { FaGithub } from "react-icons/fa";
 import MyImage from "../assets/myImg1.jpg";
+import userPic from "../assets/user1.png"
 import { useStateContext } from "../context/ContextProvider";
 import { useAuth } from "../Firebase/AuthContext";
 const ProfileCard = () => {
-  const { getCredentials, getPersonalDetails, getPersonalDetailsData } =
-    useStateContext();
-  const {user} = useAuth();
+  const { getPersonalDetailsData } = useStateContext();
+  const {user, userImage} = useAuth();
 
-  const showToast = () => {
-    toast.success("CV Downloaded", {
-      autoClose: 1000,
-      hideProgressBar: true,
-      loading: false,
-      pauseOnFocusLoss: false,
-      className: "bg-green-400 text-white rounded-3xl font-poppins font-bold ",
-    });
-  };
+
   return (
     <div className="relative">
       {/* div for the image */}
       <div className="relative   w-36 h-36 z-10 top-20 left-14 rounded-3xl">
         <img
           className="w-full h-full object-cover rounded-3xl"
-          src={MyImage}
+          src={userImage ? userImage : userPic}
           alt="Picture not available"
         />
       </div>
@@ -106,9 +98,7 @@ const ProfileCard = () => {
               <p>faiq_israr</p>
             </div> */}
           </div>
-          <div
-            className="flex items-center justify-center pt-4"
-          >
+          <div className="flex items-center justify-center pt-4">
             <Button bgColor={"blue-600"} hoverColor={"blue-700"} />
           </div>
         </div>

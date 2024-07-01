@@ -5,17 +5,12 @@ import { useStateContext } from '../../context/ContextProvider';
 import { useAuth } from '../../Firebase/AuthContext';
 
 const SideProfileComp = () => {
-    const {
-      openSidebar,
-
-      
-      getPersonalDetailsData,
-    } = useStateContext();
+    const {openSidebar, getPersonalDetailsData} = useStateContext();
 
     
    
     
-    const {user} = useAuth();
+    const { user, userImage } = useAuth();
     
   return (
     <>
@@ -26,7 +21,7 @@ const SideProfileComp = () => {
               <div className=" rounded-full h-16 w-16  duration-300   ">
                 <img
                   className="w-full h-full object-cover rounded-full "
-                  src={userPic}
+                  src={userImage ? userImage : userPic}
                   alt="Picture not available"
                 />
               </div>
