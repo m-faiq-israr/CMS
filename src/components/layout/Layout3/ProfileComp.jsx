@@ -26,7 +26,7 @@ const ProfileComp = () => {
         </div>
 
         <div className="pt-4 flex flex-col justify-center items-center">
-          {getPersonalDetailsData ? (
+          {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
             <h1 className="text-4xl font-bold text-gray-700 dark:text-white pb-5">
               {`${getPersonalDetailsData[0].fname} ${getPersonalDetailsData[0].lname}`}
             </h1>
@@ -34,7 +34,7 @@ const ProfileComp = () => {
             <h1></h1>
           )}
           <div className="flex items-center justify-center bg-gray-200 w-40 h-6 text-center rounded-full text-sm text-gray-500 dark:text-gray-900  font-poppins">
-            {getPersonalDetailsData ? (
+            {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
               <h3>{getPersonalDetailsData[0].profession}</h3>
             ) : (
               <h3></h3>
@@ -51,7 +51,7 @@ const ProfileComp = () => {
         <div className=" text-gray-500 dark:text-gray-300 text-md space-y-3  pt-4 font-poppins">
           <div className="flex justify-start items-center space-x-2">
             <IoCalendarOutline />
-            {getPersonalDetailsData ? (
+            {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
               <p>{getPersonalDetailsData[0].dob}</p>
             ) : (
               <p></p>
@@ -60,7 +60,7 @@ const ProfileComp = () => {
 
           <div className="flex justify-start items-center space-x-2">
             <GoLocation style={{ fontSize: "15px" }} />
-            {getPersonalDetailsData ? (
+            {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
               <p>{getPersonalDetailsData[0].location}</p>
             ) : (
               <p></p>
@@ -74,7 +74,7 @@ const ProfileComp = () => {
 
           <div className="flex justify-start items-center space-x-2">
             <FaMobileAlt style={{ fontSize: "15px" }} />
-            {getPersonalDetailsData ? (
+            {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
               <p>{getPersonalDetailsData[0].mobileno}</p>
             ) : (
               <p></p>

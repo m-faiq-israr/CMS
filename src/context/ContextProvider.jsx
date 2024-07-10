@@ -7,6 +7,7 @@ import {
   query,
   where,
   getDocs,
+  onSnapshot,
 } from "firebase/firestore";
 import { db } from "../Firebase/firebase";
 
@@ -28,136 +29,166 @@ export const ContextProvider = ({ children }) => {
   const [getProjectData, setgetProjectData] = useState();
   const [getSkills, setgetSkills] = useState();
 
-  useEffect(() => {
-    //fetching personal details of user from firebase
-    async function getPersonalDetailsById() {
-      try {
-        const q = query(
-          collection(db, "Personal Details"),
-          where("id", "==", userId)
-        );
-        const querySnapshot = await getDocs(q);
+ useEffect(() => {
+   // Fetching personal details of user from Firestore
+   const getPersonalDetailsById = () => {
+     try {
+       const q = query(
+         collection(db, "Personal Details"),
+         where("id", "==", userId)
+       );
 
-        if (querySnapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
-        const details = [];
+       const unsubscribe = onSnapshot(q, (querySnapshot) => {
+         if (querySnapshot.empty) {
+           console.log("No matching documents.");
+           setgetPersonalDetailsData([]);
+           return;
+         }
+         const details = [];
 
-        querySnapshot.forEach((doc) => {
-          console.log("Document data:", doc.data());
-          details.push(doc.data());
-        });
+         querySnapshot.forEach((doc) => {
+           console.log("Document data:", doc.data());
+           details.push(doc.data());
+         });
 
-        setgetPersonalDetailsData(details);
-      } catch (error) {
-        console.error("Error getting documents: ", error);
-      }
-    }
+         setgetPersonalDetailsData(details);
+       });
 
-    
+       return unsubscribe;
+     } catch (error) {
+       console.error("Error getting documents: ", error);
+     }
+   };
 
-    //fetching the education data of user from firebase
-    async function getEducationDataById() {
-      try {
-        const q = query(
-          collection(db, "Education Details"),
-          where("id", "==", userId)
-        );
-        const querySnapshot = await getDocs(q);
+   
 
-        if (querySnapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
-        const details = [];
+   // Fetching the education data of user from Firestore
+   const getEducationDataById = () => {
+     try {
+       const q = query(
+         collection(db, "Education Details"),
+         where("id", "==", userId)
+       );
 
-        querySnapshot.forEach((doc) => {
-          console.log("Document data:", doc.data());
-          details.push(...doc.data().educationData); // Assuming each document has an 'educationData' field
-        });
+       const unsubscribe = onSnapshot(q, (querySnapshot) => {
+         if (querySnapshot.empty) {
+           console.log("No matching documents.");
+           setgetEducationData([]); 
+           return;
+         }
+         const details = [];
 
-        setgetEducationData(details);
-      } catch (error) {
-        console.error("Error getting documents: ", error);
-      }
-    }
+         querySnapshot.forEach((doc) => {
+           console.log("Document data:", doc.data());
+           details.push(...doc.data().educationData); 
+         });
 
-    //fetching the experience data from firestore
-    async function getExperienceDatabyId() {
-      try {
-        const q = query(
-          collection(db, "Experience Details"),
-          where("id", "==", userId)
-        );
-        const querySnapshot = await getDocs(q);
+         setgetEducationData(details);
+       });
 
-        if (querySnapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
+       return unsubscribe;
+     } catch (error) {
+       console.error("Error getting documents: ", error);
+     }
+   };
 
-        const doc = querySnapshot.docs[0];
-        const experienceData = doc.data().experienceData;
+   // Fetching the experience data from Firestore
+   const getExperienceDatabyId = () => {
+     try {
+       const q = query(
+         collection(db, "Experience Details"),
+         where("id", "==", userId)
+       );
 
-        setgetExperienceData(experienceData);
-      } catch (error) {
-        console.error("Error getting documents: ", error);
-      }
-    }
+       const unsubscribe = onSnapshot(q, (querySnapshot) => {
+         if (querySnapshot.empty) {
+           console.log("No matching documents.");
+           setgetExperienceData([]);
+           return;
+         }
 
-    //fetching the project data from firestore
-    async function getProjectDatabyId() {
-      try {
-        const q = query(
-          collection(db, "Project Details"),
-          where("id", "==", userId)
-        );
-        const querySnapshot = await getDocs(q);
+         const doc = querySnapshot.docs[0];
+         const experienceData = doc.data().experienceData;
 
-        if (querySnapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
+         setgetExperienceData(experienceData);
+       });
 
-        const doc = querySnapshot.docs[0];
-        const projectData = doc.data().projectData;
+       return unsubscribe;
+     } catch (error) {
+       console.error("Error getting documents: ", error);
+     }
+   };
 
-        setgetProjectData(projectData);
-      } catch (error) {
-        console.error("Error getting documents: ", error);
-      }
-    }
+   // Fetching the project data from Firestore
+   const getProjectDatabyId = () => {
+     try {
+       const q = query(
+         collection(db, "Project Details"),
+         where("id", "==", userId)
+       );
 
-    //fetching the skills of user from firestore
-    async function getSkillsbyId() {
-      try {
-        const q = query(collection(db, "Skills"), where("id", "==", userId));
-        const querySnapshot = await getDocs(q);
+       const unsubscribe = onSnapshot(q, (querySnapshot) => {
+         if (querySnapshot.empty) {
+           console.log("No matching documents.");
+           setgetProjectData([]);
+           return;
+         }
 
-        if (querySnapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
-        const details = [];
+         const doc = querySnapshot.docs[0];
+         const projectData = doc.data().projectData;
+
+         setgetProjectData(projectData);
+       });
+
+       return unsubscribe;
+     } catch (error) {
+       console.error("Error getting documents: ", error);
+     }
+   };
+
+   // Fetching the skills of user from Firestore
+   const getSkillsbyId = () => {
+     try {
+       const q = query(collection(db, "Skills"), where("id", "==", userId));
+
+       const unsubscribe = onSnapshot(q, (querySnapshot) => {
+         if (querySnapshot.empty) {
+           console.log("No matching documents.");
+           setgetSkills([]);
+           return;
+         }
+         const details = [];
 
          querySnapshot.forEach((doc) => {
            console.log("Document data:", doc.data());
            details.push(...doc.data().skills); // Assuming skills is an array of strings
          });
 
-        setgetSkills(details);
-      } catch (error) {
-        console.error("Error getting documents: ", error);
-      }
-    }
+         setgetSkills(details);
+       });
 
-    getPersonalDetailsById();
-    getEducationDataById();
-    getExperienceDatabyId();
-    getProjectDatabyId();
-    getSkillsbyId();
-  }, [userId, db]);
+       return unsubscribe;
+     } catch (error) {
+       console.error("Error getting documents: ", error);
+     }
+   };
+
+   // Set up listeners
+   const unsubscribePersonalDetails = getPersonalDetailsById();
+   const unsubscribeEducationData = getEducationDataById();
+   const unsubscribeExperienceData = getExperienceDatabyId();
+   const unsubscribeProjectData = getProjectDatabyId();
+   const unsubscribeSkills = getSkillsbyId();
+
+   // Clean up listeners on component unmount
+   return () => {
+     if (unsubscribePersonalDetails) unsubscribePersonalDetails();
+     if (unsubscribeEducationData) unsubscribeEducationData();
+     if (unsubscribeExperienceData) unsubscribeExperienceData();
+     if (unsubscribeProjectData) unsubscribeProjectData();
+     if (unsubscribeSkills) unsubscribeSkills();
+   };
+ }, [userId, db]);
 
   
 

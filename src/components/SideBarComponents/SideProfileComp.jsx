@@ -26,7 +26,7 @@ const SideProfileComp = () => {
                 />
               </div>
               <div className=" font-poppins duration-300 ">
-                {getPersonalDetailsData ? (
+                {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
                   <h1 className="font-bold text-xl text-gray-800 dark:text-white">{`${getPersonalDetailsData[0].fname} ${getPersonalDetailsData[0].lname}`}</h1>
                 ) : (
                   <h1 className="font-bold text-xl text-gray-800 dark:text-white">

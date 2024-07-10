@@ -35,7 +35,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
             handleExperienceChange(index, "companyName", e.target.value)
           }
         />
-        <div className="flex gap-6 justify-between">
+        <div className="md:flex gap-6 justify-between">
           <InputDetails
             heading={"Start Date"}
             htmlFor={"startDate"}
@@ -67,7 +67,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
             value={value.location}
             type={"text"}
             placeholder={"@eg. Karachi, Pakistan"}
-            width={"72"}
+            width={"full"}
             onChange={(e) =>
               handleExperienceChange(index, "location", e.target.value)
             }

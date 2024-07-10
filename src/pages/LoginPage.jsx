@@ -18,11 +18,8 @@ import {auth} from "../Firebase/firebase";
 import { Toaster, toast } from "react-hot-toast";
 
 const LoginPage = () => {
-  const {setuserEmail} = useStateContext();
+  
   const navigate = useNavigate();
-
-  
-  
 
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
@@ -37,7 +34,7 @@ const LoginPage = () => {
         const user = userCredential.user;
 
         navigate("/");
-        toast.success("Login Successful");
+       
 
 
       })
@@ -61,7 +58,7 @@ const LoginPage = () => {
         const token = credential.accessToken;
         const user = result.user;
         navigate("/");
-        toast.success("Login Successful");
+        
 
       })
       .catch((error) => {
@@ -81,24 +78,25 @@ const LoginPage = () => {
         const accessToken = credential.accessToken;
         
         navigate("/");
-        toast.success('Login Successful');
+       
       })
       .catch((error) => { 
        const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(error.message);
+        console.log(credential)
         toast.error(`Error: ${error.message}`);
 
 
       });
   };
   return (
-    <div className="  bg-indigo-100 dark:bg-gray-800 h-screen pt-8 ">
+    <div className="  bg-indigo-100 dark:bg-gray-800 h-screen sm:pt-12 xs:pt-24    ">
       <div className={` absolute right-2 top-1 `}>
         <ThemeToggle />
       </div>
       <div className=" ">
         <form
-          className="mx-auto max-w-lg rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden font-poppins pb-5"
+          className="mx-auto md:max-w-lg sm:max-w-md xs:max-w-sm   rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden font-poppins pb-5"
           onSubmit={handleSubmit}
         >
           <div className="px-10 pt-7">

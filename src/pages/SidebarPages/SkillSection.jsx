@@ -92,13 +92,13 @@ const SkillSection = () => {
 
   return (
     <div
-      className={`pb-10 font-poppins duration-300 w-[60rem] ${
-        openSidebar ? "ml-2" : "mr-36"
+      className={`pb-10 font-poppins duration-300 h-screen xs:mx-6 sm:mx-6 ${
+        openSidebar ? "" : "mr-36"
       }`}
     >
       <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
         <form onSubmit={handleSubmit}>
-          <h1 className="text-4xl font-bold text-gray-700 dark:text-gray-100">
+          <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
             SKILLS SECTION
           </h1>
           <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
@@ -106,10 +106,10 @@ const SkillSection = () => {
           <div className="my-4 flex justify-between">
             <AddFieldButton name={"Add Skills"} onClick={addInputField} />
           </div>
-          <div className="grid grid-cols-3 gap-x-8 gap-y-10 mb-10 ">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mb-10 ">
             {skills.map((skill, index) => (
               <div key={index} className="flex items-center gap-2">
-                <div className="w-[17rem]">
+                <div className="w-full">
                   <InputField
                     type={"text"}
                     value={skill}

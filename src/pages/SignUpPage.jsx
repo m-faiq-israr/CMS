@@ -81,13 +81,13 @@ const SignUpPage = () => {
       });
   };
   return (
-    <div className="  bg-indigo-100 dark:bg-gray-800 h-screen pt-8 font-poppins ">
+    <div className="  bg-indigo-100 dark:bg-gray-800 h-screen pt-8 font-poppins xs:pt-24 ">
       <div className={` absolute right-2 top-1 `}>
         <ThemeToggle />
       </div>
       <div className=" ">
         <form
-          className="mx-auto max-w-lg pb-5 rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden"
+          className="mx-auto md:max-w-lg sm:max-w-md xs:max-w-sm  pb-5 rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden"
           onSubmit={handleSubmit}
         >
           <div className="px-10 pt-7">

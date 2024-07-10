@@ -11,6 +11,7 @@ import {
   getDocs,
   updateDoc,
   doc,
+  onSnapshot,
 } from "firebase/firestore";
 import { db, storage } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
@@ -41,36 +42,46 @@ const PersonalDetails = () => {
   });
 
   useEffect(() => {
-    const fetchPersonalDetails = async () => {
+    const fetchPersonalDetails = () => {
       if (user) {
         const q = query(
           collection(db, "Personal Details"),
           where("id", "==", user.uid)
         );
-        const querySnapshot = await getDocs(q);
 
-        if (!querySnapshot.empty) {
-          const doc = querySnapshot.docs[0];
-          const data = doc.data();
-          setPersonalDetails({
-            fname: data.fname,
-            lname: data.lname,
-            profession: data.profession,
-            location: data.location,
-            mobileno: data.mobileno,
-            dob: data.dob,
-            aboutme: data.aboutme,
-          });
-          setDocId(doc.id);
-          if (data.profilePicture) {
-            setImageUrl(data.profilePicture);
+        // Listen for real-time updates with onSnapshot
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            const data = doc.data();
+            setPersonalDetails({
+              fname: data.fname,
+              lname: data.lname,
+              profession: data.profession,
+              location: data.location,
+              mobileno: data.mobileno,
+              dob: data.dob,
+              aboutme: data.aboutme,
+            });
+            setDocId(doc.id);
+            if (data.profilePicture) {
+              setImageUrl(data.profilePicture);
+            }
+          } else {
+            // Handle case where no data is found
+            console.log("No personal details found");
           }
-        }
+        });
+
+        // Return the unsubscribe function to ensure we clean up the listener
+        return () => unsubscribe();
       }
     };
 
-    fetchPersonalDetails();
+    // Call the function to set up the listener
+    return fetchPersonalDetails();
   }, [user]);
+
 
   const onChange = (e) => {
     setPersonalDetails({ ...personalDetails, [e.target.name]: e.target.value });
@@ -136,19 +147,19 @@ const PersonalDetails = () => {
 
   return (
     <div
-      className={`pb-10 font-poppins duration-300 w-[60rem] ${
+      className={`pb-10 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
-      <div className="bg-white shadow-lg shadow-gray-300 dark:shadow-none px-10 py-10 mt-6 rounded-3xl dark:bg-gray-700">
+      <div className="bg-white shadow-lg shadow-gray-300 dark:shadow-none px-10 py-10 mt-6 rounded-3xl dark:bg-gray-700 ">
         <form onSubmit={handleSubmit}>
-          <h1 className="text-4xl font-bold text-gray-700 dark:text-gray-100">
+          <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
             PERSONAL DETAILS
           </h1>
           <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
           <div>
-            <div className="flex gap-10 justify-between">
-              <div className="w-[29rem]">
+            <div className="md:flex gap-10 ">
+              <div className=" md:w-full">
                 <InputDetails
                   heading={"First Name"}
                   htmlFor={"fname"}
@@ -160,7 +171,7 @@ const PersonalDetails = () => {
                   onChange={onChange}
                 />
               </div>
-              <div className="w-[29rem]">
+              <div className="xs:mt-4 md:w-full">
                 <InputDetails
                   heading={"Last Name"}
                   htmlFor={"lname"}
@@ -173,8 +184,8 @@ const PersonalDetails = () => {
                 />
               </div>
             </div>
-            <div className="mt-4 flex gap-10">
-              <div className="w-[29rem]">
+            <div className="mt-4 md:flex gap-10">
+              <div className="md:w-full">
                 <InputDetails
                   heading={"Profession"}
                   htmlFor={"profession"}
@@ -186,7 +197,7 @@ const PersonalDetails = () => {
                   onChange={onChange}
                 />
               </div>
-              <div className="w-[29rem]">
+              <div className=" xs:mt-4 md:w-full">
                 <InputDetails
                   heading={"Location"}
                   htmlFor={"location"}
@@ -199,8 +210,8 @@ const PersonalDetails = () => {
                 />
               </div>
             </div>
-            <div className="mt-4 flex gap-10 ">
-              <div className="w-[29rem]">
+            <div className="mt-4 md:flex gap-10 ">
+              <div className="md:w-full">
                 <InputDetails
                   heading={"Mobile No"}
                   htmlFor={"mobileno"}
@@ -212,7 +223,7 @@ const PersonalDetails = () => {
                   onChange={onChange}
                 />
               </div>
-              <div className="w-[29rem]">
+              <div className="xs:mt-4 md:w-full">
                 <InputDetails
                   heading={"Date of Birth"}
                   htmlFor={"dob"}
@@ -246,7 +257,7 @@ const PersonalDetails = () => {
                 className="font-semibold text-lg ml-2 text-gray-600 dark:text-gray-200"
                 htmlFor="profilePicture"
               >
-                {imageUrl ? 'Edit Picture' : 'Upload Picture' }
+                {imageUrl ? "Edit Picture" : "Upload Picture"}
               </label>
               <input
                 className="bg-gray-100 cursor-pointer dark:bg-gray-600 dark:text-gray-200"
@@ -264,7 +275,7 @@ const PersonalDetails = () => {
                     className="mt-4 w-32 h-32 object-cover rounded-full"
                   />
                   <div
-                    onClick={handleDeleteImage} 
+                    onClick={handleDeleteImage}
                     className="  inline-flex cursor-pointer items-center gap-1 mt-2 text-gray-100 bg-red-600 hover:bg-red-700 py-2 px-3 rounded-xl font-semibold"
                   >
                     <h1>Delete Image</h1>

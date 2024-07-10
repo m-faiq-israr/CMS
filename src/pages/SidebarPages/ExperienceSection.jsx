@@ -120,28 +120,17 @@ const ExperienceSection = () => {
       toast.error(e.message);
     }
 
-    // setexperienceInput([
-    //   {
-    //     designation: "",
-    //     companyName: "",
-    //     startDate: "",
-    //     endDate: "",
-    //     point1: "",
-    //     point2: "",
-    //     point3: "",
-    //     location: "",
-    //   },
-    // ]);
+   
   };
 
   return (
     <div
-      className={`pb-10 font-poppins duration-300 w-[60rem] ${
+      className={`pb-10 font-poppins duration-300  xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
       <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
-        <h1 className="text-4xl font-bold text-gray-700 dark:text-gray-100">
+        <h1 className="xs:text-xl text-4xl font-bold text-gray-700 dark:text-gray-100">
           EXPERIENCE SECTION
         </h1>
         <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, storage } from "./firebase"; // Import your firebase config
+import { auth, db, storage } from "./firebase"; // Import your firebase config
 import { ref, getDownloadURL } from "firebase/storage";
+import { onSnapshot } from "firebase/firestore";
 
 const AuthContext = createContext();
 
@@ -33,8 +34,38 @@ export const AuthProvider = ({ children }) => {
       setUserImage(url);
     } catch (error) {
       console.error("Error fetching image:", error);
-      setUserImage(null); // Reset the user image if an error occurs
+      setUserImage(null); 
     }
+  };
+
+  const watchUserImage = (userId) => {
+    const docRef = doc(db, "Personal Details", userId);   
+
+    const unsubscribe = onSnapshot(
+      docRef,
+      (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          if (data && data.profilePicture) {
+            setUserImage(data.profilePicture);
+          } else {
+            // If there's no imageUrl field
+            setUserImage(null);
+            console.log("No image URL available");
+          }
+        } else {
+          // Document does not exist
+          setUserImage(null);
+          console.log("No document found for the user");
+        }
+      },
+      (error) => {
+        console.error("Error fetching image:", error);
+        setUserImage(null); // Reset the user image if an error occurs
+      }
+    );
+
+    return unsubscribe; // Return the unsubscribe function to stop listening when needed
   };
 
   const logout = () => {

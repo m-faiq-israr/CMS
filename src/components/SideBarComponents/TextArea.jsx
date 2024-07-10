@@ -12,7 +12,7 @@ const TextArea = ({onChange, name, id, value, columns, rows, placeholder}) => {
         name={name}
         value={value}
         id={id}
-        required
+     
       >
       
       </textarea>

@@ -29,7 +29,7 @@ const AddEducationBox = ({index, value, onClick}) => {
           width={"full"}
           onChange={(e) => handleChange(index, "degree", e.target.value)}
         />
-        <div className="flex gap-6 justify-between">
+        <div className="lg:flex gap-6 justify-between">
           <InputDetails
             heading={"Start Date"}
             htmlFor={"startDate"}
@@ -37,7 +37,7 @@ const AddEducationBox = ({index, value, onClick}) => {
             value={value.startDate}
             type={"text"}
             placeholder={"Enter Starting Date"}
-            width={""}
+            width={"full"}
             onChange={(e) => handleChange(index, "startDate", e.target.value)}
           />
           <InputDetails
@@ -47,7 +47,7 @@ const AddEducationBox = ({index, value, onClick}) => {
             value={value.endDate}
             type={"text"}
             placeholder={"Enter Ending Date"}
-            width={""}
+            width={"full"}
             onChange={(e) => handleChange(index, "endDate", e.target.value)}
           />
           <InputDetails
@@ -57,7 +57,7 @@ const AddEducationBox = ({index, value, onClick}) => {
             value={value.cgpa}
             type={"text"}
             placeholder={"Enter your CGPA"}
-            width={""}
+            width={"full"}
             onChange={(e) => handleChange(index, "cgpa", e.target.value)}
           />
         </div>
