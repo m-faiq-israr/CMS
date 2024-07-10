@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, db, storage } from "./firebase"; // Import your firebase config
+import { auth, db, storage } from "./firebase"; 
 import { ref, getDownloadURL } from "firebase/storage";
 import { onSnapshot } from "firebase/firestore";
 

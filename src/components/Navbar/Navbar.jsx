@@ -140,7 +140,8 @@ const Navbar = () => {
             >
               Project Section
             </li>
-            <div className="px-4 inline-block">
+            <div className="px-4 flex items-center  justify-between">
+              <h1 className="text-gray-800 pb-2 dark:text-gray-100 ">Theme: </h1>
               <ThemeToggle />
             </div>
           </ul>

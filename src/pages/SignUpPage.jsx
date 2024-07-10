@@ -9,43 +9,56 @@ import { FaFacebookSquare } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import ThemeToggle from "../components/ThemeToggle";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-
-
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
-import {auth} from "../Firebase/firebase";
+import { auth } from "../Firebase/firebase";
 
 const SignUpPage = () => {
-  const {setuserEmail} = useStateContext();
+  const { setuserEmail } = useStateContext();
   const navigate = useNavigate();
 
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [error, setError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    // Clearing confirmPasswordError if user modifies any field
+    if (
+      confirmPasswordError &&
+      (e.target.name === "password" || e.target.name === "confirmPassword")
+    ) {
+      setConfirmPasswordError("");
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (credentials.password !== credentials.confirmPassword) {
+      setConfirmPasswordError("Passwords do not match");
+      return;
+    }
+    setError("");
+    setConfirmPasswordError("");
     createUserWithEmailAndPassword(
       auth,
       credentials.email,
       credentials.password
     )
       .then((userCredential) => {
-        const user = userCredential.user;
-
         navigate("/");
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        setError(error.message);
         console.log(error.message);
-        console.log(errorMessage);
       });
   };
 
@@ -53,15 +66,11 @@ const SignUpPage = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-
         navigate("/");
       })
       .catch((error) => {
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        console.log(credential);
+        setError(error.message);
+        console.log(error.message);
       });
   };
 
@@ -69,32 +78,29 @@ const SignUpPage = () => {
     const provider = new FacebookAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        const user = result.user;
-        const credential = FacebookAuthProvider.credentialFromResult(result);
-        const accessToken = credential.accessToken;
-
         navigate("/");
       })
       .catch((error) => {
-        const credential = FacebookAuthProvider.credentialFromError(error);
+        setError(error.message);
         console.log(error.message);
       });
   };
+
   return (
-    <div className="  bg-indigo-100 dark:bg-gray-800 h-screen pt-8 font-poppins xs:pt-24 ">
-      <div className={` absolute right-2 top-1 `}>
+    <div className="bg-indigo-100 dark:bg-gray-800 h-screen pt-8  font-poppins xs:pt-24">
+      <div className="absolute right-2 top-1">
         <ThemeToggle />
       </div>
-      <div className=" ">
+      <div>
         <form
-          className="mx-auto md:max-w-lg sm:max-w-md xs:max-w-sm  pb-5 rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden"
+          className="mx-auto md:max-w-md sm:max-w-md xs:max-w-sm pb-5   rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden"
           onSubmit={handleSubmit}
         >
           <div className="px-10 pt-7">
             <h1 className="text-3xl font-bold text-gray-700 dark:text-white">
               Create an account
             </h1>
-            <p className=" text-sm text-gray-600 dark:text-gray-200 pl-1 ">
+            <p className="text-sm text-gray-600 dark:text-gray-200 pl-1">
               Already have an account?{" "}
               <Link
                 to="/login"
@@ -106,56 +112,75 @@ const SignUpPage = () => {
           </div>
           <div className="flex flex-col gap-4 px-10 py-4">
             <div>
-              <label
-                htmlFor="email"
-                className="mb-2 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins"
-              >
-                Email
-              </label>
-              <InputField
-                name={"email"}
-                type={"email"}
-                placeholder={"admin@example.com"}
-                onChange={onChange}
-                width={"full"}
-              />
-            </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins "
+            <label
+              htmlFor="email"
+              className="mb-1 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins"
               >
-                Password
-              </label>
-              <InputField
-                name={"password"}
-                type={"password"}
-                placeholder={"*********"}
-                onChange={onChange}
-                width={"full"}
+              Email
+            </label>
+            <InputField
+              name="email"
+              type="email"
+              placeholder="admin@example.com"
+              onChange={onChange}
+              width={"full"}
               />
-            </div>
-            <AuthButton name={"Create an account"} />
-            <div>
-              <Divider />
-            </div>
-            <div className=" space-y-3">
-              <AuthProviderButton
-                name={"Continue with Google"}
-                icon={<FcGoogle size={"22px"} />}
-                color={"bg-gray-200"}
-                hoverColor={"bg-gray-300"}
-                onClick={googleLogin}
+              </div>
+              <div>
+                
+            <label
+              htmlFor="password"
+              className="mb-1 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins"
+              >
+              Password
+            </label>
+            <InputField
+              name="password"
+              type="password"
+              placeholder="Password"
+              onChange={onChange}
+              width={"full"}
               />
-              <AuthProviderButton
-                name={"Continue with Facebook"}
-                icon={<FaFacebookSquare />}
-                color={"bg-blue-500"}
-                hoverColor={"bg-blue-600"}
-                onClick={facebookLogin}
+              </div>
+              <div>
+
+            <label
+              htmlFor="confirmPassword"
+              className="mb-1 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins"
+              >
+              Confirm Password
+            </label>
+            <InputField
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm Password"
+              onChange={onChange}
+              width={"full"}
               />
-            </div>
+              </div>
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+            {confirmPasswordError && (
+              <p className="text-red-500 text-sm mt-1">
+                {confirmPasswordError}
+              </p>
+            )}
+            <AuthButton name="Create an account" />
+            <Divider />
+            <AuthProviderButton
+              name="Continue with Google"
+              icon={<FcGoogle size="22px" />}
+              color="bg-gray-200"
+              hoverColor="bg-gray-300"
+              onClick={googleLogin}
+            />
+            <AuthProviderButton
+              name="Continue with Facebook"
+              icon={<FaFacebookSquare />}
+              color="bg-blue-500"
+              hoverColor="bg-blue-600"
+              onClick={facebookLogin}
+            />
           </div>
         </form>
       </div>

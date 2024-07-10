@@ -13,15 +13,15 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
+  sendPasswordResetEmail,
 } from "firebase/auth";
-import {auth} from "../Firebase/firebase";
+import { auth } from "../Firebase/firebase";
 import { Toaster, toast } from "react-hot-toast";
 
 const LoginPage = () => {
-  
   const navigate = useNavigate();
-
   const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -32,20 +32,12 @@ const LoginPage = () => {
     signInWithEmailAndPassword(auth, credentials.email, credentials.password)
       .then((userCredential) => {
         const user = userCredential.user;
-
         navigate("/");
-       
-
-
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        toast.error('Incorrect email or password');
-      
-        
-
-
+        setError("Incorrect email or password");
         console.log(error);
       });
   };
@@ -58,14 +50,11 @@ const LoginPage = () => {
         const token = credential.accessToken;
         const user = result.user;
         navigate("/");
-        
-
       })
       .catch((error) => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log(credential);
-        toast.error(`Error: ${error.message}`);
-
+        setError(`Error: ${error.message}`);
       });
   };
 
@@ -76,38 +65,48 @@ const LoginPage = () => {
         const user = result.user;
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
-        
         navigate("/");
-       
       })
-      .catch((error) => { 
-       const credential = FacebookAuthProvider.credentialFromError(error);
+      .catch((error) => {
+        const credential = FacebookAuthProvider.credentialFromError(error);
         console.log(error.message);
-        console.log(credential)
-        toast.error(`Error: ${error.message}`);
-
-
+        console.log(credential);
+        setError(`Error: ${error.message}`);
       });
   };
+
+  const sendPasswordResestEmail = () =>{
+    sendPasswordResetEmail(auth, credentials.email)
+    .then(()=>{
+      toast.success("Password reset link has been sent to email");
+      
+    })
+    .catch((error)=>{
+      const errorMessage = error.message;
+      toast.error(errorMessage);
+
+    })
+  }
+
   return (
-    <div className="  bg-indigo-100 dark:bg-gray-800 h-screen sm:pt-12 xs:pt-24    ">
-      <div className={` absolute right-2 top-1 `}>
+    <div className="bg-indigo-100 dark:bg-gray-800 h-screen sm:pt-12 xs:pt-24">
+      <div className="absolute right-2 top-1">
         <ThemeToggle />
       </div>
-      <div className=" ">
+      <div>
         <form
-          className="mx-auto md:max-w-lg sm:max-w-md xs:max-w-sm   rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden font-poppins pb-5"
+          className="mx-auto md:max-w-md sm:max-w-md xs:max-w-sm rounded-3xl border dark:border-gray-600 shadow-md bg-white dark:bg-gray-700 overflow-hidden font-poppins pb-5"
           onSubmit={handleSubmit}
         >
           <div className="px-10 pt-7">
             <h1 className="text-3xl font-bold text-gray-700 dark:text-white">
               Welcome back
             </h1>
-            <p className=" text-sm text-gray-600 dark:text-gray-200 pl-1 ">
+            <p className="text-sm text-gray-600 dark:text-gray-200 pl-1">
               Don't have an account?{" "}
               <Link
                 to="/signup"
-                className="text-blue-600 font-semibold dark:text-blue-400 transition duration-100 hover:text-blue-700 "
+                className="text-blue-600 font-semibold dark:text-blue-400 transition duration-100 hover:text-blue-700"
               >
                 Sign up
               </Link>
@@ -128,39 +127,39 @@ const LoginPage = () => {
                 onChange={onChange}
                 width={"full"}
               />
+              {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
             </div>
 
             <div>
               <label
                 htmlFor="password"
-                className="mb-1 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins "
+                className="mb-1 inline-block text-sm text-gray-700 dark:text-white sm:text-base font-semibold font-poppins"
               >
                 Password
               </label>
               <InputField
                 name={"password"}
                 type={"password"}
-                placeholder={"*********"}
+                placeholder={"Password"}
                 onChange={onChange}
                 width={"full"}
               />
             </div>
 
             <div className="flex justify-end items-center">
-              
-              <Link
-                to={"/login"}
-                className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold "
+              <label
+                className="text-sm cursor-pointer text-blue-600 hover:text-blue-700 dark:text-blue-400 font-semibold"
+                onClick={sendPasswordResestEmail}
               >
                 Forgot password?
-              </Link>
+              </label>
             </div>
 
             <AuthButton name={"Sign in to your account"} />
             <div>
               <Divider />
             </div>
-            <div className=" space-y-3">
+            <div className="space-y-3">
               <AuthProviderButton
                 name={"Continue with Google"}
                 icon={<FcGoogle size={"22px"} />}
@@ -178,7 +177,7 @@ const LoginPage = () => {
             </div>
           </div>
         </form>
-        <Toaster/>
+        <Toaster />
       </div>
     </div>
   );
