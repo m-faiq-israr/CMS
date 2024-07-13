@@ -1,14 +1,21 @@
 import React from 'react'
+import { FiLoader } from 'react-icons/fi';
 import { GrUpdate } from 'react-icons/gr';
 
-const InputButton = ({name, type}) => {
+const InputButton = ({name, type, loading}) => {
   return (
     <button
       type={type}
-      className="bg-indigo-500 font-poppins font-semibold text-white py-2 px-8 rounded-xl hover:bg-indigo-600 flex items-center gap-2"
+      className="bg-indigo-500 font-poppins font-semibold text-white py-2 px-8 rounded-xl hover:bg-indigo-600  text-center"
     >
-      {name}
-      <GrUpdate />
+      {loading ? (
+        <FiLoader className="animate-spin mx-8 " size={20} />
+      ) : (
+        <div className="flex items-center gap-2">
+          {name}
+          <GrUpdate />
+        </div>
+      )}
     </button>
   );
 }

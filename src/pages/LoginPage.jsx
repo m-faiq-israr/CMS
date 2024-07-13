@@ -6,7 +6,7 @@ import Divider from "../components/Divider";
 import AuthProviderButton from "../components/AuthProviderButton";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebookSquare } from "react-icons/fa";
-import AuthButton from "../AuthButton";
+import AuthButton from '../AuthButton'
 import ThemeToggle from "../components/ThemeToggle";
 import {
   signInWithEmailAndPassword,
@@ -22,6 +22,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -29,42 +30,50 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     signInWithEmailAndPassword(auth, credentials.email, credentials.password)
       .then((userCredential) => {
         const user = userCredential.user;
+        setLoading(false);
         navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         setError("Incorrect email or password");
+        setLoading(false);
         console.log(error);
       });
   };
 
   const googleLogin = () => {
     const provider = new GoogleAuthProvider();
+   
     signInWithPopup(auth, provider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const user = result.user;
+
         navigate("/");
       })
       .catch((error) => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log(credential);
         setError(`Error: ${error.message}`);
+       
       });
   };
 
   const facebookLogin = () => {
     const provider = new FacebookAuthProvider();
+ 
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
+
         navigate("/");
       })
       .catch((error) => {
@@ -72,21 +81,20 @@ const LoginPage = () => {
         console.log(error.message);
         console.log(credential);
         setError(`Error: ${error.message}`);
+  
       });
   };
 
-  const sendPasswordResestEmail = () =>{
+  const sendPasswordResestEmail = () => {
     sendPasswordResetEmail(auth, credentials.email)
-    .then(()=>{
-      toast.success("Password reset link has been sent to email");
-      
-    })
-    .catch((error)=>{
-      const errorMessage = error.message;
-      toast.error(errorMessage);
-
-    })
-  }
+      .then(() => {
+        toast.success("Password reset link has been sent to email");
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        toast.error(errorMessage);
+      });
+  };
 
   return (
     <div className="bg-indigo-100 dark:bg-gray-800 h-screen sm:pt-12 xs:pt-24">
@@ -155,7 +163,7 @@ const LoginPage = () => {
               </label>
             </div>
 
-            <AuthButton name={"Sign in to your account"} />
+            <AuthButton name={"Sign in to your account"} loading={loading} />
             <div>
               <Divider />
             </div>

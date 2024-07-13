@@ -16,13 +16,14 @@ import {
 } from "firebase/firestore"; // Add 'doc' here
 import { db } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
-import { Toaster, toast } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const SkillSection = () => {
   const { openSidebar } = useStateContext();
   const [skills, setSkills] = useState([""]);
   const { user } = useAuth();
   const [docId, setDocId] = useState(null);
+  const [loading, setloading] = useState(false)
 
   useEffect(() => {
     const fetchSkillsData = async () => {
@@ -40,7 +41,10 @@ const SkillSection = () => {
     };
 
     fetchSkillsData();
+   
   }, [user]);
+
+   
 
   // Function to handle changes in input fields
   const handleChange = (index, value) => {
@@ -59,6 +63,10 @@ const SkillSection = () => {
     }
   };
 
+  const notify = (msg) => toast.success(msg, { duration: 1000 });
+
+  const notifyError = (error) => toast.error(error);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -67,11 +75,13 @@ const SkillSection = () => {
     }
 
     try {
+      setloading(true);
       if (docId) {
         // Update existing document
         const docRef = doc(db, "Skills", docId);
         await updateDoc(docRef, { skills });
-        toast.success("Skills Updated Successfully");
+        setloading(false);
+        notify("Skills Updated Successfully");
       } else {
         // Add new document
         const docRef = await addDoc(collection(db, "Skills"), {
@@ -79,12 +89,14 @@ const SkillSection = () => {
           skills,
         });
         console.log("Document written with ID: ", docRef.id);
-        toast.success("Skills Added Successfully");
+        setloading(false);
+        notify("Skills Added Successfully");
         setDocId(docRef.id);
       }
     } catch (e) {
+      setloading(false);
       console.error("Error adding document: ", e);
-      toast.error(e.message);
+      notifyError(e.message);
     }
 
     // setSkills([""]);
@@ -92,7 +104,7 @@ const SkillSection = () => {
 
   return (
     <div
-      className={`pb-10 font-poppins duration-300 h-screen xs:mx-6 sm:mx-6 ${
+      className={`pt-2 font-poppins duration-300 h-screen xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
@@ -103,7 +115,7 @@ const SkillSection = () => {
           </h1>
           <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
 
-          <div className="my-4 flex justify-between">
+          <div className="my-4 flex justify-end">
             <AddFieldButton name={"Add Skills"} onClick={addInputField} />
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mb-10 ">
@@ -130,7 +142,7 @@ const SkillSection = () => {
             ))}
           </div>
 
-          <InputButton type={"submit"} name={docId ? "Update" : "Save"} />
+          <InputButton type={"submit"} name={docId ? "Update" : "Save"} loading={loading} />
         </form>
         <Toaster />
       </div>

@@ -114,7 +114,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
           </div>
         </div>
        
-          <div className="mt-7 flex justify-end ">
+          <div className="mt-5 flex justify-end ">
             <RemoveFieldButton name={"Remove "} onClick={handleRemove} />
           </div>
       </div>

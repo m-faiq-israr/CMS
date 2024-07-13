@@ -8,6 +8,7 @@ import AuthProviderButton from "../components/AuthProviderButton";
 import { FaFacebookSquare } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import ThemeToggle from "../components/ThemeToggle";
+
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import {
   signInWithEmailAndPassword,
@@ -20,7 +21,7 @@ import { auth } from "../Firebase/firebase";
 const SignUpPage = () => {
   const { setuserEmail } = useStateContext();
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -48,6 +49,7 @@ const SignUpPage = () => {
     }
     setError("");
     setConfirmPasswordError("");
+     setLoading(true);
     createUserWithEmailAndPassword(
       auth,
       credentials.email,
@@ -58,11 +60,13 @@ const SignUpPage = () => {
       })
       .catch((error) => {
         setError(error.message);
+        setLoading(false);
         console.log(error.message);
       });
   };
 
   const googleLogin = () => {
+ 
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -71,10 +75,13 @@ const SignUpPage = () => {
       .catch((error) => {
         setError(error.message);
         console.log(error.message);
-      });
+      })
+      
   };
 
+
   const facebookLogin = () => {
+
     const provider = new FacebookAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -83,11 +90,12 @@ const SignUpPage = () => {
       .catch((error) => {
         setError(error.message);
         console.log(error.message);
-      });
+      })
+     
   };
 
   return (
-    <div className="bg-indigo-100 dark:bg-gray-800 h-screen pt-8  font-poppins xs:pt-24">
+    <div className="bg-indigo-100 dark:bg-gray-800  py-10  font-poppins xs:pt-24">
       <div className="absolute right-2 top-1">
         <ThemeToggle />
       </div>
@@ -165,7 +173,7 @@ const SignUpPage = () => {
                 {confirmPasswordError}
               </p>
             )}
-            <AuthButton name="Create an account" />
+            <AuthButton name="Create an account" loading={loading} />
             <Divider />
             <AuthProviderButton
               name="Continue with Google"

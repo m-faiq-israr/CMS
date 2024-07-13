@@ -4,7 +4,7 @@ import MainCard from "../../MainCard";
 
 const Layout3Page = () => {
   return (
-    <div className="flex flex-col items-center  py-10 bg-indigo-200 dark:bg-slate-800 h-screen">
+    <div className="flex flex-col items-center  py-10 bg-indigo-200 dark:bg-slate-800 ">
       <div>
         <ProfileComp />
       </div>

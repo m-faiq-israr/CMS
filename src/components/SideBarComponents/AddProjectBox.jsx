@@ -48,7 +48,7 @@ const AddProjectBox = ({index, value, removeField}) => {
             }
           />
         </div>
-        <div className="mt-7  flex justify-end">
+        <div className="mt-5  flex justify-end">
           <RemoveFieldButton name={"Remove "} onClick={removeField} />
         </div>
       </div>

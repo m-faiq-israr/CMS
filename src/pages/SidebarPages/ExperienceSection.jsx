@@ -11,16 +11,17 @@ import {
   getDocs,
   updateDoc,
   doc,
-} from "firebase/firestore"; // Add 'doc' here
+} from "firebase/firestore";
 import { db } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
-import { Toaster, toast } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const ExperienceSection = () => {
   const { user } = useAuth();
   const { openSidebar, experienceInput, setexperienceInput } =
     useStateContext();
   const [docId, setDocId] = useState(null);
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     const fetchExperienceData = async () => {
@@ -69,6 +70,10 @@ const ExperienceSection = () => {
     }
   };
 
+  const notify = (msg) => toast.success(msg, { duration: 1000 });
+
+  const notifyError = (error) => toast.error(error);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const experienceData = experienceInput.map((input) => {
@@ -100,11 +105,13 @@ const ExperienceSection = () => {
     }
 
     try {
+      setloading(true);
       if (docId) {
         // Update existing document
         const docRef = doc(db, "Experience Details", docId);
         await updateDoc(docRef, { experienceData });
-        toast.success("Experience Details Updated");
+        setloading(false);
+        notify("Experience Details Updated");
       } else {
         // Add new document
         const docRef = await addDoc(collection(db, "Experience Details"), {
@@ -112,20 +119,20 @@ const ExperienceSection = () => {
           experienceData,
         });
         console.log("Document written with ID: ", docRef.id);
-        toast.success("Experience Added Successfully");
+        setloading(false);
+        notify("Experience Added Successfully");
         setDocId(docRef.id);
       }
     } catch (e) {
+      setloading(false);
       console.log(e);
-      toast.error(e.message);
+      notifyError(e.message);
     }
-
-   
   };
 
   return (
     <div
-      className={`pb-10 font-poppins duration-300  xs:mx-6 sm:mx-6 ${
+      className={`h-scree py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
@@ -133,25 +140,34 @@ const ExperienceSection = () => {
         <h1 className="xs:text-xl text-4xl font-bold text-gray-700 dark:text-gray-100">
           EXPERIENCE SECTION
         </h1>
-        <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
+        <div className="bg-indigo-700 h-2 w-16 rounded-full "></div>
         <div className="mb-4 flex justify-end">
           <AddFieldButton
             name={"Add Experience"}
             onClick={addExperienceField}
           />
         </div>
-        <form onSubmit={handleSubmit}>
-          {experienceInput.map((input, index) => (
-            <div key={index} className="mb-4">
-              <AddExperienceBox
-                handleRemove={() => removeExperienceField(index)}
-                value={input}
-                index={index}
+          <form onSubmit={handleSubmit}>
+        <div className="max-h-[130vh] overflow-y-auto scrollbar-hide">
+            {experienceInput.map((input, index) => (
+              <div key={index} className="mb-4">
+                <AddExperienceBox
+                  handleRemove={() => removeExperienceField(index)}
+                  value={input}
+                  index={index}
+                />
+              </div>
+            ))}
+              </div>
+              <div className="mt-2">
+
+            <InputButton
+              type={"submit"}
+              name={docId ? "Update" : "Save"}
+              loading={loading}
               />
-            </div>
-          ))}
-          <InputButton type={"submit"} name={docId ? "Update" : "Save"} />
-        </form>
+              </div>
+          </form>
         <Toaster />
       </div>
     </div>

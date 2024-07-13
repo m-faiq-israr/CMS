@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { db, storage } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
-import { Toaster, toast } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import {
   ref,
   uploadBytes,
@@ -30,6 +30,7 @@ const PersonalDetails = () => {
   const [docId, setDocId] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [loading, setloading] = useState(false);
 
   const [personalDetails, setPersonalDetails] = useState({
     fname: "",
@@ -99,6 +100,10 @@ const PersonalDetails = () => {
     return url;
   };
 
+  const notify = (msg) => toast.success(msg, { duration: 1000 });
+
+   const notifyError = (error) => toast.error(error);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -112,6 +117,7 @@ const PersonalDetails = () => {
     }
 
     try {
+      setloading(true)
       if (docId) {
         // Update existing document
         const docRef = doc(db, "Personal Details", docId);
@@ -119,7 +125,8 @@ const PersonalDetails = () => {
           ...personalDetails,
           profilePicture: newImageUrl,
         });
-        toast.success("Personal Details Updated");
+        setloading(false)
+        notify("Personal Details Updated");
       } else {
         // Add new document
         const docRef = await addDoc(collection(db, "Personal Details"), {
@@ -128,12 +135,16 @@ const PersonalDetails = () => {
           profilePicture: newImageUrl,
         });
         console.log("Document written with ID: ", docRef.id);
-        toast.success("Personal Details Added");
+        setloading(false)
+        notify("Personal Details Added");
         setDocId(docRef.id);
       }
     } catch (e) {
+        setloading(false);
+
       console.error("Error adding document: ", e);
-      toast.error(e.message);
+      notifyError(e.message);
+
     }
   };
 
@@ -144,6 +155,8 @@ const PersonalDetails = () => {
     await updateDoc(doc(db, "Personal Details", docId), { profilePicture: "" });
     setImageUrl(null);
   };
+
+ 
 
   return (
     <div
@@ -293,7 +306,7 @@ const PersonalDetails = () => {
               </p>
             </div>
             <div className="mt-4">
-              <InputButton type={"submit"} name={docId ? "Update" : "Save"} />
+              <InputButton type={"submit"} name={docId ? "Update" : "Save"} loading={loading} />
             </div>
           </div>
         </form>

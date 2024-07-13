@@ -13,7 +13,7 @@ const ProfilePage = () => {
   
   const layoutName = localStorage.getItem("Layout");
   return (
-    <div className='h-screen'>
+    <div className='bg-white dark:bg-slate-800 h-screen'>
       {layoutName === "Layout1" ? (
         <Layout1 />
       ) : layoutName === "Layout2" ? (
