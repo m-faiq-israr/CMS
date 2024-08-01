@@ -11,6 +11,7 @@ import { FaLaptopCode } from "react-icons/fa";
 
 import { MdWork } from "react-icons/md";
 import LogoutButton from './LogoutButton';
+import ThemeToggle from './ThemeToggle';
 
 
 const SideBar = () => {
@@ -34,8 +35,12 @@ const SideBar = () => {
         openSidebar ? "w-72 bg-white" : "w-16 bg-white"
       } relative duration-300 shadow-lg`}
     >
+      {/* <div className=' absolute right-2'>
+
+      <ThemeToggle/>
+      </div> */}
       <SidebarMenuIcon />
-      <div className='h-full flex flex-col justify-between pb-4'>
+      <div className='h-full flex flex-col justify-between pb-4 pt-2'>
         <div className=''>
         <SideProfileComp />
           <div className="pt-6">

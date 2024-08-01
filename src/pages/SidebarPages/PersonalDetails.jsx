@@ -11,7 +11,7 @@ import {
   getDocs,
   updateDoc,
   doc,
-  onSnapshot,
+  getDoc,
 } from "firebase/firestore";
 import { db, storage } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
@@ -26,11 +26,12 @@ import { MdDelete } from "react-icons/md";
 
 const PersonalDetails = () => {
   const { user } = useAuth();
-  const { openSidebar } = useStateContext();
+  const { openSidebar, loading, setLoading } = useStateContext();
   const [docId, setDocId] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const [loading, setloading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [timestamp, setTimestamp] = useState(null);
 
   const [personalDetails, setPersonalDetails] = useState({
     fname: "",
@@ -43,18 +44,19 @@ const PersonalDetails = () => {
   });
 
   useEffect(() => {
-    const fetchPersonalDetails = () => {
+    const fetchPersonalDetails = async () => {
       if (user) {
-        const q = query(
-          collection(db, "Personal Details"),
-          where("id", "==", user.uid)
-        );
+        console.log("User ID:", user.uid);
+        try {
+          const q = query(
+            collection(db, "Personal Details"),
+            where("id", "==", user.uid)
+          );
 
-        // Listen for real-time updates with onSnapshot
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const querySnapshot = await getDocs(q);
           if (!querySnapshot.empty) {
-            const doc = querySnapshot.docs[0];
-            const data = doc.data();
+            const docSnapshot = querySnapshot.docs[0];
+            const data = docSnapshot.data();
             setPersonalDetails({
               fname: data.fname,
               lname: data.lname,
@@ -64,25 +66,25 @@ const PersonalDetails = () => {
               dob: data.dob,
               aboutme: data.aboutme,
             });
-            setDocId(doc.id);
+            setTimestamp(data.timestamp);
+            setDocId(docSnapshot.id);
             if (data.profilePicture) {
               setImageUrl(data.profilePicture);
             }
           } else {
-            // Handle case where no data is found
-            console.log("No personal details found");
+            console.log("No personal details found for user ID:", user.uid);
           }
-        });
-
-        // Return the unsubscribe function to ensure we clean up the listener
-        return () => unsubscribe();
+        } catch (error) {
+          console.error("Error fetching personal details", error);
+        }
       }
     };
 
-    // Call the function to set up the listener
-    return fetchPersonalDetails();
-  }, [user]);
+     
 
+    fetchPersonalDetails();
+  
+  }, [user]);
 
   const onChange = (e) => {
     setPersonalDetails({ ...personalDetails, [e.target.name]: e.target.value });
@@ -102,51 +104,80 @@ const PersonalDetails = () => {
 
   const notify = (msg) => toast.success(msg, { duration: 1000 });
 
-   const notifyError = (error) => toast.error(error);
+  const notifyError = (error) => toast.error(error);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      console.error("User not authenticated");
-      return;
-    }
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+   if (!user) {
+     console.error("User not authenticated");
+     return;
+   }
 
-    let newImageUrl = imageUrl;
-    if (profilePicture) {
-      newImageUrl = await uploadImage(profilePicture);
-    }
+   let newImageUrl = imageUrl;
+   if (profilePicture) {
+     newImageUrl = await uploadImage(profilePicture);
+   }
 
-    try {
-      setloading(true)
-      if (docId) {
-        // Update existing document
-        const docRef = doc(db, "Personal Details", docId);
-        await updateDoc(docRef, {
-          ...personalDetails,
-          profilePicture: newImageUrl,
-        });
-        setloading(false)
-        notify("Personal Details Updated");
-      } else {
-        // Add new document
-        const docRef = await addDoc(collection(db, "Personal Details"), {
-          id: user.uid,
-          ...personalDetails,
-          profilePicture: newImageUrl,
-        });
-        console.log("Document written with ID: ", docRef.id);
-        setloading(false)
-        notify("Personal Details Added");
-        setDocId(docRef.id);
-      }
-    } catch (e) {
-        setloading(false);
+   try {
+     setLoading(true);
+     let docIdToUpdate;
 
-      console.error("Error adding document: ", e);
-      notifyError(e.message);
+     if (docId) {
+       // Update existing document
+       const docRef = doc(db, "Personal Details", docId);
+       await updateDoc(docRef, {
+         ...personalDetails,
+         profilePicture: newImageUrl,
+       });
+       docIdToUpdate = docId;
+      //  notify("Personal Details Updated");
+     } else {
+       // Add new document
+       const docRef = await addDoc(collection(db, "Personal Details"), {
+         id: user.uid,
+         ...personalDetails,
+         profilePicture: newImageUrl,
+       });
+       docIdToUpdate = docRef.id;
+       notify("Personal Details Added");
+       setDocId(docIdToUpdate);
+     }
 
-    }
-  };
+     if (!docIdToUpdate) {
+       throw new Error("Document ID is undefined or empty");
+     }
+
+     // Call the cloud function to update the timestamp
+     console.log("Calling Cloud Function with docId:", docIdToUpdate);
+     const response = await fetch(
+       "http://localhost:5001/cms-d4a0e/us-central1/personalDetailsTimestamp",
+       {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${await user.getIdToken()}`,
+         },
+         body: JSON.stringify({ docId: docIdToUpdate }), // Pass the correct docId here
+       }
+     );
+
+     if (!response.ok) {
+       const errorText = await response.text();
+       console.error("Failed to update timestamp:", errorText);
+       throw new Error("Failed to update timestamp: " + errorText);
+     }
+       notify("Personal Details Updated");
+
+     console.log("Timestamp updated successfully");
+
+     setLoading(false);
+   } catch (e) {
+     setLoading(false);
+     console.error("Error adding/updating document: ", e);
+     notifyError(e.message);
+   }
+ };
+
 
   const handleDeleteImage = async () => {
     if (!user) return;
@@ -156,8 +187,6 @@ const PersonalDetails = () => {
     setImageUrl(null);
   };
 
- 
-
   return (
     <div
       className={`pb-10 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
@@ -166,9 +195,17 @@ const PersonalDetails = () => {
     >
       <div className="bg-white shadow-lg shadow-gray-300 dark:shadow-none px-10 py-10 mt-6 rounded-3xl dark:bg-gray-700 ">
         <form onSubmit={handleSubmit}>
-          <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
-            PERSONAL DETAILS
-          </h1>
+          <div className="flex items-center justify-between">
+            <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
+              PERSONAL DETAILS
+            </h1>
+            {timestamp && (
+              <p className="text-gray-700 dark:text-gray-200">
+                Last Updated: {new Date(timestamp).toLocaleString()}
+              </p>
+            )}
+          </div>
+
           <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
           <div>
             <div className="md:flex gap-10 ">
@@ -182,6 +219,7 @@ const PersonalDetails = () => {
                   placeholder={"Enter First Name"}
                   width={"full"}
                   onChange={onChange}
+                  loading={loading}
                 />
               </div>
               <div className="xs:mt-4 md:w-full">
@@ -194,6 +232,7 @@ const PersonalDetails = () => {
                   placeholder={"Enter Last Name"}
                   width={"full"}
                   onChange={onChange}
+                  loading={loading}
                 />
               </div>
             </div>
@@ -208,6 +247,7 @@ const PersonalDetails = () => {
                   placeholder={"eg. Software Engineer"}
                   width={"full"}
                   onChange={onChange}
+                  loading={loading}
                 />
               </div>
               <div className=" xs:mt-4 md:w-full">
@@ -220,6 +260,7 @@ const PersonalDetails = () => {
                   placeholder={"eg. Karachi, Pakistan"}
                   width={"full"}
                   onChange={onChange}
+                  loading={loading}
                 />
               </div>
             </div>
@@ -234,6 +275,7 @@ const PersonalDetails = () => {
                   placeholder={"+92-3409322323"}
                   width={"full"}
                   onChange={onChange}
+                  loading={loading}
                 />
               </div>
               <div className="xs:mt-4 md:w-full">
@@ -246,6 +288,7 @@ const PersonalDetails = () => {
                   placeholder={"Enter Date of Birth"}
                   width={"full"}
                   onChange={onChange}
+                  loading={loading}
                 />
               </div>
             </div>
@@ -263,6 +306,7 @@ const PersonalDetails = () => {
                 value={personalDetails.aboutme}
                 rows={4}
                 placeholder="Write brief introduction about yourself"
+                disabled={loading}
               />
             </div>
             <div className="mt-4 font-poppins flex flex-col">
@@ -273,12 +317,13 @@ const PersonalDetails = () => {
                 {imageUrl ? "Edit Picture" : "Upload Picture"}
               </label>
               <input
-                className="bg-gray-100 cursor-pointer dark:bg-gray-600 dark:text-gray-200"
+                className="bg-gray-100 cursor-pointer dark:bg-gray-600 dark:text-gray-200 disabled:cursor-not-allowed"
                 type="file"
                 id="profilePicture"
                 name="profilePicture"
                 accept="image/*"
                 onChange={handleFileChange}
+                disabled={loading}
               />
               {imageUrl && (
                 <div className=" inline-block ">
@@ -287,15 +332,16 @@ const PersonalDetails = () => {
                     alt="Profile"
                     className="mt-4 w-32 h-32 object-cover rounded-full"
                   />
-                  <div
+                  <button
                     onClick={handleDeleteImage}
-                    className="  inline-flex cursor-pointer items-center gap-1 mt-2 text-gray-100 bg-red-600 hover:bg-red-700 py-2 px-3 rounded-xl font-semibold"
+                    disabled={loading}
+                    className=" disabled:cursor-not-allowed   inline-flex cursor-pointer items-center gap-1 mt-2 text-gray-100 bg-red-600 hover:bg-red-700 py-2 px-3 rounded-xl font-semibold"
                   >
                     <h1>Delete Image</h1>
                     <div>
                       <MdDelete />
                     </div>
-                  </div>
+                  </button>
                 </div>
               )}
               <p
@@ -306,7 +352,11 @@ const PersonalDetails = () => {
               </p>
             </div>
             <div className="mt-4">
-              <InputButton type={"submit"} name={docId ? "Update" : "Save"} loading={loading} />
+              <InputButton
+                type={"submit"}
+                name={docId ? "Update" : "Save"}
+                loading={loading}
+              />
             </div>
           </div>
         </form>

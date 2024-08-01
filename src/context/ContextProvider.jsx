@@ -22,6 +22,8 @@ export const ContextProvider = ({ children }) => {
     userId = user.uid;
   }
 
+  const [loading, setLoading] = useState(false);
+
   //fetching the data from firebase
   const [getPersonalDetailsData, setgetPersonalDetailsData] = useState();
   const [getEducationData, setgetEducationData] = useState();
@@ -292,6 +294,8 @@ export const ContextProvider = ({ children }) => {
         setActiveTab,
         inputs,
         setInputs,
+        loading,
+        setLoading,
       }}
     >
       {children}

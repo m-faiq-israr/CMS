@@ -13,6 +13,7 @@ import {
   getDocs,
   updateDoc,
   doc,
+  getDoc
 } from "firebase/firestore"; // Add 'doc' here
 import { db } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
@@ -24,6 +25,8 @@ const SkillSection = () => {
   const { user } = useAuth();
   const [docId, setDocId] = useState(null);
   const [loading, setloading] = useState(false)
+  const [timestamp, setTimestamp] = useState(null);
+
 
   useEffect(() => {
     const fetchSkillsData = async () => {
@@ -33,8 +36,9 @@ const SkillSection = () => {
 
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
-          const data = doc.data().skills;
-          setSkills(data);
+          const data = doc.data();
+          setSkills(data.skills);
+          setTimestamp(data.timestamp);
           setDocId(doc.id);
         }
       }
@@ -75,32 +79,64 @@ const SkillSection = () => {
     }
 
     try {
-      setloading(true);
+      setloading(true); // Use camelCase for setLoading
+      let docIdToUpdate;
+
       if (docId) {
         // Update existing document
         const docRef = doc(db, "Skills", docId);
         await updateDoc(docRef, { skills });
-        setloading(false);
-        notify("Skills Updated Successfully");
+        docIdToUpdate = docId;
+        // notify("Skills Updated Successfully");
       } else {
         // Add new document
         const docRef = await addDoc(collection(db, "Skills"), {
           id: user.uid,
           skills,
         });
-        console.log("Document written with ID: ", docRef.id);
-        setloading(false);
+        docIdToUpdate = docRef.id;
         notify("Skills Added Successfully");
-        setDocId(docRef.id);
+        setDocId(docIdToUpdate);
       }
+
+      if (!docIdToUpdate) {
+        throw new Error("Document ID is undefined or empty");
+      }
+
+      // Call the cloud function to update the timestamp
+      console.log("Calling Cloud Function with docId:", docIdToUpdate);
+      const response = await fetch(
+        "http://localhost:5001/cms-d4a0e/us-central1/skillSectionTimestamp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await user.getIdToken()}`,
+          },
+          body: JSON.stringify({ docId: docIdToUpdate }), // Pass the correct docId here
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to update timestamp:", errorText);
+        throw new Error("Failed to update timestamp: " + errorText);
+      }
+
+      console.log("Timestamp updated successfully");
+        notify("Skills Updated Successfully");
+
+      
+
+      setloading(false);
     } catch (e) {
       setloading(false);
-      console.error("Error adding document: ", e);
+      console.error("Error adding/updating document: ", e);
       notifyError(e.message);
     }
-
-    // setSkills([""]);
   };
+
+
 
   return (
     <div
@@ -110,13 +146,20 @@ const SkillSection = () => {
     >
       <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
         <form onSubmit={handleSubmit}>
-          <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
-            SKILLS SECTION
-          </h1>
+          <div className="flex items-center justify-between">
+            <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
+              SKILLS SECTION
+            </h1>
+            {timestamp && (
+              <p className="text-gray-700 dark:text-gray-200">
+                Last Updated: {new Date(timestamp).toLocaleString()}
+              </p>
+            )}
+          </div>
           <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
 
           <div className="my-4 flex justify-end">
-            <AddFieldButton name={"Add Skills"} onClick={addInputField} />
+            <AddFieldButton name={"Add Skills"} onClick={addInputField} disabled={loading} />
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mb-10 ">
             {skills.map((skill, index) => (
@@ -128,12 +171,18 @@ const SkillSection = () => {
                     width={"full"}
                     placeholder={`Enter Skill ${index + 1}`}
                     onChange={(e) => handleChange(index, e.target.value)}
+                    disabled={loading}
                   />
                 </div>
-                <div className="bg-red-500 hover:bg-red-600 rounded-full px-1 py-1 flex items-center justify-center ">
+                <div
+                  className={`bg-red-500 ${
+                    loading ? "" : "hover:bg-red-600"
+                  }   rounded-full px-1 py-1 flex items-center justify-center`}
+                >
                   <button
                     onClick={() => removeInputField(index)}
-                    className="text-white"
+                    disabled={loading}
+                    className="text-white disabled:cursor-not-allowed "
                   >
                     <TiMinus />
                   </button>
@@ -142,7 +191,11 @@ const SkillSection = () => {
             ))}
           </div>
 
-          <InputButton type={"submit"} name={docId ? "Update" : "Save"} loading={loading} />
+          <InputButton
+            type={"submit"}
+            name={docId ? "Update" : "Save"}
+            loading={loading}
+          />
         </form>
         <Toaster />
       </div>

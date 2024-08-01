@@ -33,7 +33,7 @@ const LayoutButton = ({ layoutNo }) => {
       : "Nothing to show";
   return (
       <div
-        className={`xs:w-40 xs:h-32 sm:w-40 sm:h-32 md:w-60 md:h-44 rounded-xl bg-cover cursor-pointer ${isClicked ? 'ring-4' : ''}  ring-blue-500 dark:ring-blue-600 ${isHovered ? 'bg-opacity-50' : ''}`}
+        className={`xs:w-52 xs:h-32 sm:w-40 sm:h-32 md:w-60 md:h-44 rounded-xl bg-cover cursor-pointer ${isClicked ? 'ring-4' : ''}  ring-blue-500 dark:ring-blue-600 ${isHovered ? 'bg-opacity-50' : ''}`}
         style={{ backgroundImage: `url(${layout})`}}
         onClick={handleClick}
         tabIndex='0'

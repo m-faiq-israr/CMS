@@ -5,14 +5,16 @@ import userPic from "../../assets/user1.png";
 import { useAuth } from "../../Firebase/AuthContext";
 import { useStateContext } from "../../context/ContextProvider";
 import ThemeToggle from "../ThemeToggle";
-
+import {useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-    const { user, userImage } = useAuth();
-    const { getPersonalDetailsData, setsidebarPage, sidebarPage } =
-      useStateContext();
-
-
+  const { user, userImage } = useAuth();
+  const { getPersonalDetailsData, setsidebarPage, sidebarPage } =
+  useStateContext();
+  
+  
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -27,6 +29,12 @@ const Navbar = () => {
 
 
   };
+
+  const Logout = () =>{
+    logout();
+    navigate('/login');
+    
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -143,6 +151,9 @@ const Navbar = () => {
             <div className="px-4 flex items-center  justify-between">
               <h1 className="text-gray-800 pb-2 dark:text-gray-100 ">Theme: </h1>
               <ThemeToggle />
+            </div>
+            <div onClick={Logout} className="px-4  cursor-pointer text-red-500 hover:text-red-600 dark:text-red-500 dark:hover:text-red-600 font-semibold ">
+              <h1>Logout</h1>
             </div>
           </ul>
         </div>

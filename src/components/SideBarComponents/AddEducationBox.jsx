@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import InputDetails from './InputDetails';
 import RemoveFieldButton from './RemoveFieldButton';
 import { useStateContext } from '../../context/ContextProvider';
-const AddEducationBox = ({index, value, onClick}) => {
+const AddEducationBox = ({index, value, onClick, loading}) => {
    
     
     const {handleChange} = useStateContext();
@@ -18,6 +18,7 @@ const AddEducationBox = ({index, value, onClick}) => {
           placeholder={"Enter your Institute Name"}
           width={"full"}
           onChange={(e) => handleChange(index, "institute", e.target.value)}
+          loading={loading}
         />
         <InputDetails
           heading={"Degree"}
@@ -28,6 +29,7 @@ const AddEducationBox = ({index, value, onClick}) => {
           placeholder={"Enter your Degree Name"}
           width={"full"}
           onChange={(e) => handleChange(index, "degree", e.target.value)}
+          loading={loading}
         />
         <div className="lg:flex gap-6 justify-between">
           <InputDetails
@@ -39,6 +41,7 @@ const AddEducationBox = ({index, value, onClick}) => {
             placeholder={"Enter Starting Date"}
             width={"full"}
             onChange={(e) => handleChange(index, "startDate", e.target.value)}
+            loading={loading}
           />
           <InputDetails
             heading={"End Date"}
@@ -49,6 +52,7 @@ const AddEducationBox = ({index, value, onClick}) => {
             placeholder={"Enter Ending Date"}
             width={"full"}
             onChange={(e) => handleChange(index, "endDate", e.target.value)}
+            loading={loading}
           />
           <InputDetails
             heading={"CGPA"}
@@ -59,12 +63,17 @@ const AddEducationBox = ({index, value, onClick}) => {
             placeholder={"Enter your CGPA"}
             width={"full"}
             onChange={(e) => handleChange(index, "cgpa", e.target.value)}
+            loading={loading}
           />
         </div>
       </div>
 
       <div className="pt-7 flex justify-end">
-        <RemoveFieldButton name={"Remove "} onClick={onClick} />
+        <RemoveFieldButton
+          name={"Remove "}
+          onClick={onClick}
+          disabled={loading}
+        />
       </div>
     </div>
   );

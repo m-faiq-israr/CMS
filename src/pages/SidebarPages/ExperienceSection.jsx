@@ -22,6 +22,7 @@ const ExperienceSection = () => {
     useStateContext();
   const [docId, setDocId] = useState(null);
   const [loading, setloading] = useState(false);
+  const [timestamp, setTimestamp] = useState(null);
 
   useEffect(() => {
     const fetchExperienceData = async () => {
@@ -34,9 +35,12 @@ const ExperienceSection = () => {
 
         if (!querySnapshot.empty) {
           const doc = querySnapshot.docs[0];
-          const data = doc.data().experienceData;
-          setexperienceInput(data);
+          const data = doc.data();
+          setexperienceInput(data.experienceData);
+          setTimestamp(data.timestamp);
+          
           setDocId(doc.id);
+
         }
       }
     };
@@ -74,61 +78,94 @@ const ExperienceSection = () => {
 
   const notifyError = (error) => toast.error(error);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const experienceData = experienceInput.map((input) => {
-      const {
-        designation,
-        companyName,
-        startDate,
-        endDate,
-        point1,
-        point2,
-        point3,
-        location,
-      } = input;
-      return {
-        designation,
-        companyName,
-        startDate,
-        endDate,
-        point1,
-        point2,
-        point3,
-        location,
-      };
-    });
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+   const experienceData = experienceInput.map((input) => {
+     const {
+       designation,
+       companyName,
+       startDate,
+       endDate,
+       point1,
+       point2,
+       point3,
+       location,
+     } = input;
+     return {
+       designation,
+       companyName,
+       startDate,
+       endDate,
+       point1,
+       point2,
+       point3,
+       location,
+     };
+   });
 
-    if (!user) {
-      console.log("User not authenticated");
-      return;
-    }
+   if (!user) {
+     console.log("User not authenticated");
+     return;
+   }
 
-    try {
-      setloading(true);
-      if (docId) {
-        // Update existing document
-        const docRef = doc(db, "Experience Details", docId);
-        await updateDoc(docRef, { experienceData });
-        setloading(false);
-        notify("Experience Details Updated");
-      } else {
-        // Add new document
-        const docRef = await addDoc(collection(db, "Experience Details"), {
-          id: user.uid,
-          experienceData,
-        });
-        console.log("Document written with ID: ", docRef.id);
-        setloading(false);
-        notify("Experience Added Successfully");
-        setDocId(docRef.id);
-      }
-    } catch (e) {
-      setloading(false);
-      console.log(e);
-      notifyError(e.message);
-    }
-  };
+   try {
+     setloading(true); // Use camelCase for setLoading
+     let docIdToUpdate;
+
+     if (docId) {
+       // Update existing document
+       const docRef = doc(db, "Experience Details", docId);
+       await updateDoc(docRef, { experienceData });
+       docIdToUpdate = docId;
+      //  notify("Experience Details Updated");
+     } else {
+       // Add new document
+       const docRef = await addDoc(collection(db, "Experience Details"), {
+         id: user.uid,
+         experienceData,
+       });
+       docIdToUpdate = docRef.id;
+       notify("Experience Added Successfully");
+       setDocId(docIdToUpdate);
+     }
+
+     if (!docIdToUpdate) {
+       throw new Error("Document ID is undefined or empty");
+     }
+
+     // Call the cloud function to update the timestamp
+     console.log("Calling Cloud Function with docId:", docIdToUpdate);
+     const response = await fetch(
+       "http://localhost:5001/cms-d4a0e/us-central1/experienceSectionTimestamp",
+       {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${await user.getIdToken()}`,
+         },
+         body: JSON.stringify({ docId: docIdToUpdate }),
+       }
+     );
+
+     if (!response.ok) {
+       const errorText = await response.text();
+       console.error("Failed to update timestamp:", errorText);
+       throw new Error("Failed to update timestamp: " + errorText);
+     }
+
+     console.log("Experience Timestamp updated successfully");
+       notify("Experience Details Updated");
+
+
+     setloading(false);
+   } catch (e) {
+     setloading(false);
+     console.log(e);
+     notifyError(e.message);
+   }
+ };
+
+
 
   return (
     <div
@@ -137,37 +174,46 @@ const ExperienceSection = () => {
       }`}
     >
       <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
-        <h1 className="xs:text-xl text-4xl font-bold text-gray-700 dark:text-gray-100">
-          EXPERIENCE SECTION
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
+            EXPERIENCE SECTION
+          </h1>
+          {timestamp && (
+            <p className="text-gray-700 dark:text-gray-200">
+              Last Updated: {new Date(timestamp).toLocaleString()}
+            </p>
+          )}
+        </div>
         <div className="bg-indigo-700 h-2 w-16 rounded-full "></div>
         <div className="mb-4 flex justify-end">
           <AddFieldButton
             name={"Add Experience"}
             onClick={addExperienceField}
+            disabled={loading}
+
           />
         </div>
-          <form onSubmit={handleSubmit}>
-        <div className="max-h-[130vh] overflow-y-auto scrollbar-hide">
+        <form onSubmit={handleSubmit}>
+          <div className="max-h-[130vh] overflow-y-auto scrollbar-hide">
             {experienceInput.map((input, index) => (
               <div key={index} className="mb-4">
                 <AddExperienceBox
                   handleRemove={() => removeExperienceField(index)}
                   value={input}
                   index={index}
+                  loading={loading}
                 />
               </div>
             ))}
-              </div>
-              <div className="mt-2">
-
+          </div>
+          <div className="mt-2">
             <InputButton
               type={"submit"}
               name={docId ? "Update" : "Save"}
               loading={loading}
-              />
-              </div>
-          </form>
+            />
+          </div>
+        </form>
         <Toaster />
       </div>
     </div>

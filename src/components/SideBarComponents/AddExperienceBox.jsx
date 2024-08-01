@@ -5,7 +5,7 @@ import TextareaLabel from './TextareaLabel';
 import RemoveFieldButton from './RemoveFieldButton';
 import { useStateContext } from "../../context/ContextProvider";
 
-const AddExperienceBox = ({handleRemove, value, index}) => {
+const AddExperienceBox = ({handleRemove, value, index, loading}) => {
         const { handleExperienceChange } = useStateContext();
 
   return (
@@ -22,6 +22,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
           onChange={(e) =>
             handleExperienceChange(index, "designation", e.target.value)
           }
+          loading={loading}
         />
         <InputDetails
           heading={"Company Name"}
@@ -34,6 +35,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
           onChange={(e) =>
             handleExperienceChange(index, "companyName", e.target.value)
           }
+          loading={loading}
         />
         <div className="md:flex gap-6 justify-between">
           <InputDetails
@@ -47,6 +49,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
             onChange={(e) =>
               handleExperienceChange(index, "startDate", e.target.value)
             }
+            loading={loading}
           />
           <InputDetails
             heading={"End Date"}
@@ -59,6 +62,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
             onChange={(e) =>
               handleExperienceChange(index, "endDate", e.target.value)
             }
+            loading={loading}
           />
           <InputDetails
             heading={"Location"}
@@ -71,6 +75,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
             onChange={(e) =>
               handleExperienceChange(index, "location", e.target.value)
             }
+            loading={loading}
           />
         </div>
         <div className=" space-y-4">
@@ -84,6 +89,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
               onChange={(e) =>
                 handleExperienceChange(index, "point1", e.target.value)
               }
+              disabled={loading}
             />
           </div>
           <div className="flex flex-col">
@@ -97,6 +103,7 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
               onChange={(e) =>
                 handleExperienceChange(index, "point2", e.target.value)
               }
+              disabled={loading}
             />
           </div>
           <div className="flex flex-col">
@@ -110,13 +117,18 @@ const AddExperienceBox = ({handleRemove, value, index}) => {
               onChange={(e) =>
                 handleExperienceChange(index, "point3", e.target.value)
               }
+              disabled={loading}
             />
           </div>
         </div>
-       
-          <div className="mt-5 flex justify-end ">
-            <RemoveFieldButton name={"Remove "} onClick={handleRemove} />
-          </div>
+
+        <div className="mt-5 flex justify-end ">
+          <RemoveFieldButton
+            name={"Remove "}
+            onClick={handleRemove}
+            disabled={loading}
+          />
+        </div>
       </div>
     </div>
   );

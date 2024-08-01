@@ -28,17 +28,17 @@ const ThemeToggle = () => {
       {/* Toggle button for large screens */}
       <button
         onClick={handleToggleTheme}
-        className="lg:inline-block hidden h-10 w-10 mt-1 rounded-2xl p-2 hover:bg-indigo-200 dark:hover:bg-gray-700"
+        className="lg:inline-block hidden h-10 w-10  rounded-2xl p-2 duration-500  "
       >
         <svg
-          className="fill-violet-800 block dark:hidden"
+          className="fill-violet-800 block dark:hidden duration-500"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
         </svg>
         <svg
-          className="fill-yellow-500 hidden dark:block"
+          className="fill-yellow-500 hidden dark:block duration-500"
           fill="currentColor"
           viewBox="0 0 20 20"
         >

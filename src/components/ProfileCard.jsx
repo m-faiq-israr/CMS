@@ -12,6 +12,7 @@ import MyImage from "../assets/myImg1.jpg";
 import userPic from "../assets/user1.png"
 import { useStateContext } from "../context/ContextProvider";
 import { useAuth } from "../Firebase/AuthContext";
+import { Tooltip } from "react-tooltip";
 const ProfileCard = () => {
   const { getPersonalDetailsData } = useStateContext();
   const {user, userImage} = useAuth();
@@ -49,9 +50,27 @@ const ProfileCard = () => {
             )}
           </div>
           <div className="flex justify-center items-center gap-4 text-gray-700 dark:text-white py-2">
-            <FaGithub className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
-            <FaXTwitter className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
-            <FaLinkedinIn className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
+            <a
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content="Github"
+              data-tooltip-place="top"
+            >
+              <FaGithub className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
+            </a>
+            <a
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content="Twitter"
+              data-tooltip-place="top"
+            >
+              <FaXTwitter className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
+            </a>
+            <a
+              data-tooltip-id="my-tooltip"
+              data-tooltip-content="LinkedIn"
+              data-tooltip-place="top"
+            >
+              <FaLinkedinIn className="hover:text-black hover:cursor-pointer dark:hover:text-gray-400" />
+            </a>
           </div>
         </div>
 
@@ -103,6 +122,7 @@ const ProfileCard = () => {
           </div>
         </div>
       </div>
+      <Tooltip id="my-tooltip" />
     </div>
   );
 };

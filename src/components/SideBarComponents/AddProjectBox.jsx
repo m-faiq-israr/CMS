@@ -5,7 +5,7 @@ import TextArea from './TextArea';
 import RemoveFieldButton from './RemoveFieldButton';
 import { useStateContext } from '../../context/ContextProvider';
 
-const AddProjectBox = ({index, value, removeField}) => {
+const AddProjectBox = ({index, value, removeField, loading}) => {
     const {handleProjectChange} = useStateContext();
   return (
     <div className="bg-gray-50 dark:bg-gray-600 p-8 rounded-xl">
@@ -21,6 +21,7 @@ const AddProjectBox = ({index, value, removeField}) => {
           onChange={(e) =>
             handleProjectChange(index, "projectTitle", e.target.value)
           }
+          loading={loading}
         />
 
         <InputDetails
@@ -34,6 +35,7 @@ const AddProjectBox = ({index, value, removeField}) => {
           onChange={(e) =>
             handleProjectChange(index, "techUsed", e.target.value)
           }
+          loading={loading}
         />
         <div className="flex flex-col">
           <TextareaLabel name={"Project Description"} />
@@ -46,10 +48,11 @@ const AddProjectBox = ({index, value, removeField}) => {
             onChange={(e) =>
               handleProjectChange(index, "point1", e.target.value)
             }
+            disabled={loading}
           />
         </div>
         <div className="mt-5  flex justify-end">
-          <RemoveFieldButton name={"Remove "} onClick={removeField} />
+          <RemoveFieldButton name={"Remove "} onClick={removeField} disabled={loading}/>
         </div>
       </div>
     </div>

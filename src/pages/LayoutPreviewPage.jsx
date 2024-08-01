@@ -16,7 +16,7 @@ const LayoutPreviewPage = () => {
       } duration-300`}
     >
       <div className="flex flex-col items-center justify-center xs:pt-10 sm:pt-40  md:pt-40 xs:pb-10  top-[]">
-        <h1 className=" select-none dark:text-white ml-0 text-gray-700 font-poppins font-bold mb-6  text-2xl ">
+        <h1 className=" select-none dark:text-white ml-0 text-gray-700 font-poppins font-bold mb-6 xs:text-xl sm:text-xl  md:text-2xl ">
           Select the Layout to Preview,
         </h1>
 
@@ -28,7 +28,7 @@ const LayoutPreviewPage = () => {
         <div className="mt-4 pr-5">
           <button
             onClick={handleClick}
-            className="  bg-indigo-500 xs:ml-4 px-12 py-2 rounded-xl ml-8 mt-6 text-white text-lg font-semibold hover:bg-indigo-600 flex items-center gap-1"
+            className="  bg-indigo-500 xs:ml-4 xs:px-5 sm:px-6 md:px-12 py-2 rounded-xl ml-8 mt-6 text-white text-lg font-semibold hover:bg-indigo-600 flex items-center gap-1"
           >
             <h1>Preview</h1>
             <TbLayoutSidebarRightCollapseFilled size={'24px'} className='pt-0.5' />

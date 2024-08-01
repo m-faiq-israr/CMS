@@ -12,36 +12,36 @@ const LogoutButton = () => {
    
     navigate("/login");
     setCredentials({ email: "", password: "" });
-    const updatedData = [
-      { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
-    ];
-    localStorage.setItem("educationData", JSON.stringify(updatedData));
+    // const updatedData = [
+    //   { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
+    // ];
+    // localStorage.setItem("educationData", JSON.stringify(updatedData));
  
 
 
-    const updatedExperience = [
-      {
-        designation: "",
-        companyName: "",
-        startDate: "",
-        endDate: "",
-        point1: "",
-        point2: "",
-        point3: "",
-      },
-    ];
-    localStorage.setItem("experienceData", JSON.stringify(updatedExperience));
+    // const updatedExperience = [
+    //   {
+    //     designation: "",
+    //     companyName: "",
+    //     startDate: "",
+    //     endDate: "",
+    //     point1: "",
+    //     point2: "",
+    //     point3: "",
+    //   },
+    // ];
+    // localStorage.setItem("experienceData", JSON.stringify(updatedExperience));
 
     
 
-    const updatedProject = [
-      {
-        projectTitle: "",
-        techUsed: "",
-        point1: "",
-      },
-    ];
-    localStorage.setItem("projectData", JSON.stringify(updatedProject));
+    // const updatedProject = [
+    //   {
+    //     projectTitle: "",
+    //     techUsed: "",
+    //     point1: "",
+    //   },
+    // ];
+    // localStorage.setItem("projectData", JSON.stringify(updatedProject));
   };
   return (
     <div

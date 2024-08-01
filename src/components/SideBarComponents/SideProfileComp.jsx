@@ -17,7 +17,7 @@ const SideProfileComp = () => {
       {openSidebar ? (
         <>
           <div className="">
-            <div className="flex items-center gap-3 pt-4 px-3 pb-3 duration-300 ">
+            <div className="flex items-center gap-3 pt- px-3 pb-3 duration-300 ">
               <div className=" rounded-full h-16 w-16  duration-300   ">
                 <img
                   className="w-full h-full object-cover rounded-full "
