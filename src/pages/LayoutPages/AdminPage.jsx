@@ -54,7 +54,7 @@ const AdminPage = () => {
           ) : sidebarPage === "ChatBot" ? (
             <div className="">
 
-              {/* <ChatbotPage/> */}
+              <ChatbotPage/>
             </div>
           ) : (
             <HomePage />
