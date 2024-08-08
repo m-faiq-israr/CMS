@@ -18,10 +18,34 @@ import toast, { Toaster } from "react-hot-toast";
 
 const ProjectSection = () => {
   const { user } = useAuth();
-  const { openSidebar, projectInput, setprojectInput } = useStateContext();
+  const { openSidebar } = useStateContext();
   const [docId, setDocId] = useState(null);
   const [loading, setloading] = useState(false);
   const [timestamp, settimestamp] = useState(null);
+  const [emptyValue, setEmptyValue] = useState(true);
+   const [projectInput, setprojectInput] = useState([
+     {
+       projectTitle: "",
+       techUsed: "",
+       point1: "",
+     },
+   ]);
+
+    const checkEmptyFields = (inputs) => {
+      const allEmpty = inputs.every(
+        (input) => !input.projectTitle && !input.techUsed && !input.point1
+      );
+      setEmptyValue(allEmpty);
+    };
+
+     const handleProjectChange = (index, field, value) => {
+       setprojectInput((prevInputs) => {
+         const updatedInputs = [...prevInputs];
+         updatedInputs[index][field] = value;
+          checkEmptyFields(updatedInputs);
+         return updatedInputs;
+       });
+     };
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -37,6 +61,7 @@ const ProjectSection = () => {
           const data = doc.data();
           setprojectInput(data.projectData);
           settimestamp(data.timestamp)
+          checkEmptyFields(data.projectData);
           setDocId(doc.id);
         }
       }
@@ -50,6 +75,10 @@ const ProjectSection = () => {
       ...prevInputs,
       { projectTitle: "", techUsed: "", point1: "" },
     ]);
+     checkEmptyFields([
+       ...inputs,
+       { projectTitle: "", techUsed: "", point1: "" },
+     ]);
   };
 
   const removeProjectField = (index) => {
@@ -57,6 +86,7 @@ const ProjectSection = () => {
       setprojectInput((prevInputs) => {
         const updatedInputs = [...prevInputs];
         updatedInputs.splice(index, 1);
+         checkEmptyFields(updatedInputs);
         return updatedInputs;
       });
     }
@@ -139,24 +169,28 @@ const handleSubmit = async (e) => {
 
   return (
     <div
-      className={`h-scree py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
+      className={`xs:h-full py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
       <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
-        <div className="flex items-center justify-between">
+        <div className="md:flex items-center justify-between">
           <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
             PROJECT SECTION
           </h1>
           {timestamp && (
-            <p className="text-gray-700 dark:text-gray-200">
+            <p className="xs:text-sm pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
               Last Updated: {new Date(timestamp).toLocaleString()}
             </p>
           )}
         </div>
         <div className="bg-indigo-700 h-2 w-16 rounded-full "></div>
         <div className="mb-4 flex justify-end">
-          <AddFieldButton name={"Add Project"} onClick={addProjectField} disabled={loading} />
+          <AddFieldButton
+            name={"Add Project"}
+            onClick={addProjectField}
+            disabled={loading}
+          />
         </div>
         <form onSubmit={handleSubmit}>
           <div className="max-h-[70vh] overflow-y-auto scrollbar-hide">
@@ -167,6 +201,7 @@ const handleSubmit = async (e) => {
                   index={index}
                   removeField={() => removeProjectField(index)}
                   loading={loading}
+                  handleProjectChange={handleProjectChange}
                 />
               </div>
             ))}
@@ -176,6 +211,7 @@ const handleSubmit = async (e) => {
               type={"submit"}
               name={docId ? "Update" : "Save"}
               loading={loading}
+              emptyValue={emptyValue}
             />
           </div>
         </form>

@@ -37,7 +37,7 @@ const ProfileSection = () => {
 
       <div className="xs:hidden sm:hidden md:block">
         {/* skills section */}
-        {getSkills ? (
+        {getSkills !== null ? (
           <>
             <div className=" md:pt-14 ">
               <div className="flex items-center gap-2 text-gray-200 font-bold text-xl font-poppins">

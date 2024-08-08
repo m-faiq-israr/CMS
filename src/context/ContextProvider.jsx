@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef} from "react";
+import { sendMsgToAI } from "../components/ChatBot/OpenAi";
 
 import { useAuth } from "../Firebase/AuthContext";
 import {
@@ -206,62 +207,67 @@ export const ContextProvider = ({ children }) => {
   const [activeTab, setActiveTab] = useState("Home Page");
 
 
+  //chatbot
 
-  //Holds education data
-  const [inputs, setInputs] = useState([
-    { institute: "", degree: "", startDate: "", endDate: "", cgpa: "" },
+   const [showSlide, setShowSlide] = useState(false);
+  const [Mobile, setMobile] = useState(false);
+  const [chatValue, setChatValue] = useState("");
+  const [message, setMessage] = useState([
+    {
+      text: "Hi, I'm ChatGPT, a powerful language model created by OpenAI. My primary function is to assist users in generating human-like text based on the prompts and questions I receive. I have been trained on a diverse range of internet text up until September 2021, so I can provide information, answer questions, engage in conversations, offer suggestions, and more on a wide array of topics. Please feel free to ask me anything or let me know how I can assist you today!",
+      isBot: true,
+    },
   ]);
+  const msgEnd = useRef(null);
 
-  const handleChange = (index, field, value) => {
-    setInputs((prevInputs) => {
-      const updatedInputs = [...prevInputs];
-      updatedInputs[index][field] = value;
-      return updatedInputs;
-    });
+  // useEffect(() => {
+  //   msgEnd.current.scrollIntoView();
+  // }, [message]);
+
+  // button Click function
+  const handleSend = async () => {
+    const text = chatValue;
+    setChatValue("");
+    setMessage([...message, { text, isBot: false }]);
+    const res = await sendMsgToAI(text);
+    setMessage([
+      ...message,
+      { text, isBot: false },
+      { text: res, isBot: true },
+    ]);
   };
+
+  // Enter Click function
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSend();
+    }
+  };
+
+  // Query Click function
+  const handleQuery = async (e) => {
+    const text = e.target.innerText;
+    setMessage([...message, { text, isBot: false }]);
+    const res = await sendMsgToAI(text);
+    setMessage([
+      ...message,
+      { text, isBot: false },
+      { text: res, isBot: true },
+    ]);
+  };
+
+
+
+
+
+
+
 
  
 
-  //Holds Experience data
-  const [experienceInput, setexperienceInput] = useState([
-    {
-      designation: "",
-      companyName: "",
-      startDate: "",
-      endDate: "",
-      point1: "",
-      point2: "",
-      point3: "",
-      location: "",
-    },
-  ]);
-
-  const handleExperienceChange = (index, field, value) => {
-    setexperienceInput((prevInputs) => {
-      const updatedInputs = [...prevInputs];
-      updatedInputs[index][field] = value;
-      return updatedInputs;
-    });
-  };
-
  
 
-  //Holds Project data
-  const [projectInput, setprojectInput] = useState([
-    {
-      projectTitle: "",
-      techUsed: "",
-      point1: "",
-    },
-  ]);
 
-  const handleProjectChange = (index, field, value) => {
-    setprojectInput((prevInputs) => {
-      const updatedInputs = [...prevInputs];
-      updatedInputs[index][field] = value;
-      return updatedInputs;
-    });
-  };
 
   
 
@@ -278,24 +284,28 @@ export const ContextProvider = ({ children }) => {
         setopenSidebar,
         sidebarPage,
         setsidebarPage,
-        handleChange,
         getPersonalDetailsData,
         getEducationData,
         getExperienceData,
         getProjectData,
         getSkills,
-        experienceInput,
-        setexperienceInput,
-        handleExperienceChange,
-        projectInput,
-        setprojectInput,
-        handleProjectChange,
+
         activeTab,
         setActiveTab,
-        inputs,
-        setInputs,
+
         loading,
         setLoading,
+        showSlide,
+        setShowSlide,
+        Mobile,
+        setMobile,
+        chatValue,
+        setChatValue,
+        handleSend,
+        message,
+        msgEnd,
+        handleKeyPress,
+        handleQuery,
       }}
     >
       {children}

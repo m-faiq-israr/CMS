@@ -30,8 +30,8 @@ const PersonalDetails = () => {
   const [docId, setDocId] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  // const [loading, setLoading] = useState(false);
   const [timestamp, setTimestamp] = useState(null);
+  const [emptyValue, setEmptyValue] = useState(true);
 
   const [personalDetails, setPersonalDetails] = useState({
     fname: "",
@@ -74,20 +74,38 @@ const PersonalDetails = () => {
           } else {
             console.log("No personal details found for user ID:", user.uid);
           }
+          checkEmptyFields();
         } catch (error) {
           console.error("Error fetching personal details", error);
         }
       }
     };
 
-     
-
     fetchPersonalDetails();
-  
   }, [user]);
 
   const onChange = (e) => {
     setPersonalDetails({ ...personalDetails, [e.target.name]: e.target.value });
+    checkEmptyFields();
+  };
+
+  const checkEmptyFields = () => {
+    const { fname, lname, profession, location, mobileno, dob, aboutme } =
+      personalDetails;
+    if (
+      fname === "" &&
+      lname === "" &&
+      profession === "" &&
+      location === "" &&
+      mobileno === "" &&
+      dob === "" &&
+      aboutme === "" &&
+      profilePicture === ""
+    ) {
+      setEmptyValue(true);
+    } else {
+      setEmptyValue(false);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -106,78 +124,77 @@ const PersonalDetails = () => {
 
   const notifyError = (error) => toast.error(error);
 
- const handleSubmit = async (e) => {
-   e.preventDefault();
-   if (!user) {
-     console.error("User not authenticated");
-     return;
-   }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
 
-   let newImageUrl = imageUrl;
-   if (profilePicture) {
-     newImageUrl = await uploadImage(profilePicture);
-   }
+    let newImageUrl = imageUrl;
+    if (profilePicture) {
+      newImageUrl = await uploadImage(profilePicture);
+    }
 
-   try {
-     setLoading(true);
-     let docIdToUpdate;
+    try {
+      setLoading(true);
+      let docIdToUpdate;
 
-     if (docId) {
-       // Update existing document
-       const docRef = doc(db, "Personal Details", docId);
-       await updateDoc(docRef, {
-         ...personalDetails,
-         profilePicture: newImageUrl,
-       });
-       docIdToUpdate = docId;
-      //  notify("Personal Details Updated");
-     } else {
-       // Add new document
-       const docRef = await addDoc(collection(db, "Personal Details"), {
-         id: user.uid,
-         ...personalDetails,
-         profilePicture: newImageUrl,
-       });
-       docIdToUpdate = docRef.id;
-       notify("Personal Details Added");
-       setDocId(docIdToUpdate);
-     }
+      if (docId) {
+        // Update existing document
+        const docRef = doc(db, "Personal Details", docId);
+        await updateDoc(docRef, {
+          ...personalDetails,
+          profilePicture: newImageUrl,
+        });
+        docIdToUpdate = docId;
+        //  notify("Personal Details Updated");
+      } else {
+        // Add new document
+        const docRef = await addDoc(collection(db, "Personal Details"), {
+          id: user.uid,
+          ...personalDetails,
+          profilePicture: newImageUrl,
+        });
+        docIdToUpdate = docRef.id;
+        notify("Personal Details Added");
+        setDocId(docIdToUpdate);
+      }
 
-     if (!docIdToUpdate) {
-       throw new Error("Document ID is undefined or empty");
-     }
+      if (!docIdToUpdate) {
+        throw new Error("Document ID is undefined or empty");
+      }
 
-     // Call the cloud function to update the timestamp
-     console.log("Calling Cloud Function with docId:", docIdToUpdate);
-     const response = await fetch(
-       "http://localhost:5001/cms-d4a0e/us-central1/personalDetailsTimestamp",
-       {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-           Authorization: `Bearer ${await user.getIdToken()}`,
-         },
-         body: JSON.stringify({ docId: docIdToUpdate }), // Pass the correct docId here
-       }
-     );
+      // Call the cloud function to update the timestamp
+      console.log("Calling Cloud Function with docId:", docIdToUpdate);
+      const response = await fetch(
+        "http://localhost:5001/cms-d4a0e/us-central1/personalDetailsTimestamp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await user.getIdToken()}`,
+          },
+          body: JSON.stringify({ docId: docIdToUpdate }), // Pass the correct docId here
+        }
+      );
 
-     if (!response.ok) {
-       const errorText = await response.text();
-       console.error("Failed to update timestamp:", errorText);
-       throw new Error("Failed to update timestamp: " + errorText);
-     }
-       notify("Personal Details Updated");
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to update timestamp:", errorText);
+        throw new Error("Failed to update timestamp: " + errorText);
+      }
+      notify("Personal Details Updated");
 
-     console.log("Timestamp updated successfully");
+      console.log("Timestamp updated successfully");
 
-     setLoading(false);
-   } catch (e) {
-     setLoading(false);
-     console.error("Error adding/updating document: ", e);
-     notifyError(e.message);
-   }
- };
-
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.error("Error adding/updating document: ", e);
+      notifyError(e.message);
+    }
+  };
 
   const handleDeleteImage = async () => {
     if (!user) return;
@@ -195,12 +212,12 @@ const PersonalDetails = () => {
     >
       <div className="bg-white shadow-lg shadow-gray-300 dark:shadow-none px-10 py-10 mt-6 rounded-3xl dark:bg-gray-700 ">
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center justify-between">
+          <div className="md:flex  items-center justify-between">
             <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
               PERSONAL DETAILS
             </h1>
             {timestamp && (
-              <p className="text-gray-700 dark:text-gray-200">
+              <p className="xs:text-sm pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
                 Last Updated: {new Date(timestamp).toLocaleString()}
               </p>
             )}
@@ -356,6 +373,7 @@ const PersonalDetails = () => {
                 type={"submit"}
                 name={docId ? "Update" : "Save"}
                 loading={loading}
+                emptyValue={emptyValue}
               />
             </div>
           </div>

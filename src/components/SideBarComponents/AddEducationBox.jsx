@@ -2,10 +2,8 @@ import React, { useState } from 'react'
 import InputDetails from './InputDetails';
 import RemoveFieldButton from './RemoveFieldButton';
 import { useStateContext } from '../../context/ContextProvider';
-const AddEducationBox = ({index, value, onClick, loading}) => {
-   
-    
-    const {handleChange} = useStateContext();
+const AddEducationBox = ({ index, value, onClick, loading, handleChange }) => {
+  // const { handleChange } = useStateContext();
   return (
     <div className="bg-gray-50 dark:bg-gray-600 p-8 rounded-xl">
       <div className="flex flex-col gap-4">
@@ -77,6 +75,6 @@ const AddEducationBox = ({index, value, onClick, loading}) => {
       </div>
     </div>
   );
-}
+};
 
 export default AddEducationBox

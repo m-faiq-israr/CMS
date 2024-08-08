@@ -19,25 +19,31 @@ const ContactDetails = ({ linkedIn}) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <FaMobile />
-        {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
-          <p>{getPersonalDetailsData[0].mobileno}</p>
+        {getPersonalDetailsData[0].mobileno ? (
+          <>
+            <FaMobile />
+            <p>{getPersonalDetailsData[0].mobileno}</p>
+          </>
         ) : (
           <p></p>
         )}
       </div>
       <div className="flex items-center gap-2">
-        <IoLocationSharp />
-        {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
-          <p>{getPersonalDetailsData[0].location}</p>
+        {getPersonalDetailsData[0].location ? (
+          <>
+            <IoLocationSharp />
+            <p>{getPersonalDetailsData[0].location}</p>
+          </>
         ) : (
           <p></p>
         )}
       </div>
       <div className="flex items-center gap-2">
-        <BsLinkedin />
         {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
-          <p>{`${getPersonalDetailsData[0].fname} ${getPersonalDetailsData[0].lname}`}</p>
+          <>
+            <BsLinkedin />
+            <p>{`${getPersonalDetailsData[0].fname} ${getPersonalDetailsData[0].lname}`}</p>
+          </>
         ) : (
           <p></p>
         )}

@@ -1,5 +1,5 @@
 import React from 'react'
-import InputField from '../InputField';
+import InputField from '../TextBoxes/InputField';
 import { useStateContext } from '../../context/ContextProvider';
 
 const InputDetails = ({heading, name, onChange, placeholder, type, width, htmlFor, value, loading}) => {

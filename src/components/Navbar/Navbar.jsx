@@ -4,7 +4,7 @@ import { FiMenu } from "react-icons/fi";
 import userPic from "../../assets/user1.png";
 import { useAuth } from "../../Firebase/AuthContext";
 import { useStateContext } from "../../context/ContextProvider";
-import ThemeToggle from "../ThemeToggle";
+import ThemeToggle from "../Buttons/ThemeToggle";
 import {useNavigate } from "react-router-dom";
 
 const Navbar = () => {

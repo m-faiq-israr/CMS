@@ -5,8 +5,14 @@ import TextareaLabel from './TextareaLabel';
 import RemoveFieldButton from './RemoveFieldButton';
 import { useStateContext } from "../../context/ContextProvider";
 
-const AddExperienceBox = ({handleRemove, value, index, loading}) => {
-        const { handleExperienceChange } = useStateContext();
+const AddExperienceBox = ({
+  handleRemove,
+  value,
+  index,
+  loading,
+  handleExperienceChange,
+}) => {
+  // const { handleExperienceChange } = useStateContext();
 
   return (
     <div className="bg-gray-50 dark:bg-gray-600 p-8 rounded-xl">
@@ -132,6 +138,6 @@ const AddExperienceBox = ({handleRemove, value, index, loading}) => {
       </div>
     </div>
   );
-}
+};
 
 export default AddExperienceBox

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useStateContext } from "../../context/ContextProvider";
 import InputButton from "../../components/SideBarComponents/InputButton";
-import InputField from "../../components/InputField";
+import InputField from "../../components/TextBoxes/InputField";
 import AddFieldButton from "../../components/SideBarComponents/AddFieldButton";
 import RemoveFieldButton from "../../components/SideBarComponents/RemoveFieldButton";
 import { TiMinus } from "react-icons/ti";
@@ -13,7 +13,7 @@ import {
   getDocs,
   updateDoc,
   doc,
-  getDoc
+  getDoc,
 } from "firebase/firestore"; // Add 'doc' here
 import { db } from "../../Firebase/firebase";
 import { useAuth } from "../../Firebase/AuthContext";
@@ -24,9 +24,9 @@ const SkillSection = () => {
   const [skills, setSkills] = useState([""]);
   const { user } = useAuth();
   const [docId, setDocId] = useState(null);
-  const [loading, setloading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [timestamp, setTimestamp] = useState(null);
-
+  const [emptyValue, setEmptyValue] = useState(true);
 
   useEffect(() => {
     const fetchSkillsData = async () => {
@@ -42,28 +42,34 @@ const SkillSection = () => {
           setDocId(doc.id);
         }
       }
+      checkEmptyFields();
     };
 
     fetchSkillsData();
-   
   }, [user]);
 
-   
+  const checkEmptyFields = () => {
+    const allFieldsEmpty = skills.every((skill) => !skill);
+    setEmptyValue(allFieldsEmpty);
+  };
 
   // Function to handle changes in input fields
   const handleChange = (index, value) => {
     const updatedSkills = [...skills];
     updatedSkills[index] = value;
     setSkills(updatedSkills);
+    checkEmptyFields();
   };
 
   const addInputField = () => {
     setSkills((prevInputs) => [...prevInputs, ""]);
+    checkEmptyFields();
   };
 
   const removeInputField = (index) => {
     if (skills.length > 1) {
       setSkills((prevInputs) => prevInputs.filter((_, i) => i !== index));
+      checkEmptyFields();
     }
   };
 
@@ -79,7 +85,7 @@ const SkillSection = () => {
     }
 
     try {
-      setloading(true); // Use camelCase for setLoading
+      setLoading(true);
       let docIdToUpdate;
 
       if (docId) {
@@ -124,19 +130,15 @@ const SkillSection = () => {
       }
 
       console.log("Timestamp updated successfully");
-        notify("Skills Updated Successfully");
+      notify("Skills Updated Successfully");
 
-      
-
-      setloading(false);
+      setLoading(false);
     } catch (e) {
-      setloading(false);
+      setLoading(false);
       console.error("Error adding/updating document: ", e);
       notifyError(e.message);
     }
   };
-
-
 
   return (
     <div
@@ -146,12 +148,12 @@ const SkillSection = () => {
     >
       <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center justify-between">
+          <div className="md:flex items-center justify-between">
             <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
               SKILLS SECTION
             </h1>
             {timestamp && (
-              <p className="text-gray-700 dark:text-gray-200">
+              <p className="xs:text-sm pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
                 Last Updated: {new Date(timestamp).toLocaleString()}
               </p>
             )}
@@ -159,9 +161,13 @@ const SkillSection = () => {
           <div className="bg-indigo-700 h-2 w-16 rounded-full mb-8"></div>
 
           <div className="my-4 flex justify-end">
-            <AddFieldButton name={"Add Skills"} onClick={addInputField} disabled={loading} />
+            <AddFieldButton
+              name={"Add Skills"}
+              onClick={addInputField}
+              disabled={loading}
+            />
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mb-10 ">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mb-10">
             {skills.map((skill, index) => (
               <div key={index} className="flex items-center gap-2">
                 <div className="w-full">
@@ -177,12 +183,12 @@ const SkillSection = () => {
                 <div
                   className={`bg-red-500 ${
                     loading ? "" : "hover:bg-red-600"
-                  }   rounded-full px-1 py-1 flex items-center justify-center`}
+                  } rounded-full px-1 py-1 flex items-center justify-center`}
                 >
                   <button
                     onClick={() => removeInputField(index)}
                     disabled={loading}
-                    className="text-white disabled:cursor-not-allowed "
+                    className="text-white disabled:cursor-not-allowed"
                   >
                     <TiMinus />
                   </button>
@@ -195,6 +201,7 @@ const SkillSection = () => {
             type={"submit"}
             name={docId ? "Update" : "Save"}
             loading={loading}
+            emptyValue={emptyValue}
           />
         </form>
         <Toaster />

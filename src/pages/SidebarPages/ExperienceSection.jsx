@@ -18,11 +18,49 @@ import toast, { Toaster } from "react-hot-toast";
 
 const ExperienceSection = () => {
   const { user } = useAuth();
-  const { openSidebar, experienceInput, setexperienceInput } =
+  const [emptyValue, setEmptyValue] = useState(true);
+  const { openSidebar } =
     useStateContext();
+     const [experienceInput, setexperienceInput] = useState([
+       {
+         designation: "",
+         companyName: "",
+         startDate: "",
+         endDate: "",
+         point1: "",
+         point2: "",
+         point3: "",
+         location: "",
+       },
+     ]);
   const [docId, setDocId] = useState(null);
   const [loading, setloading] = useState(false);
   const [timestamp, setTimestamp] = useState(null);
+
+   const checkEmptyFields = (inputs) => {
+     const allEmpty = inputs.every(
+       (input) =>
+         !input.designation &&
+         !input.companyName &&
+         !input.startDate &&
+         !input.endDate &&
+         !input.point1 &&
+         !input.point2 &&
+         !input.point3
+     );
+     setEmptyValue(allEmpty);
+   };
+
+
+ const handleExperienceChange = (index, field, value) => {
+   setexperienceInput((prevInputs) => {
+     const updatedInputs = [...prevInputs];
+     updatedInputs[index][field] = value;
+      checkEmptyFields(updatedInputs);
+
+     return updatedInputs;
+   });
+ };
 
   useEffect(() => {
     const fetchExperienceData = async () => {
@@ -38,7 +76,7 @@ const ExperienceSection = () => {
           const data = doc.data();
           setexperienceInput(data.experienceData);
           setTimestamp(data.timestamp);
-          
+          checkEmptyFields(data.experienceData);
           setDocId(doc.id);
 
         }
@@ -62,6 +100,19 @@ const ExperienceSection = () => {
         location: "",
       },
     ]);
+     checkEmptyFields([
+       ...inputs,
+       {
+         designation: "",
+         companyName: "",
+         startDate: "",
+         endDate: "",
+         point1: "",
+         point2: "",
+         point3: "",
+         location: "",
+       },
+     ]);
   };
 
   const removeExperienceField = (index) => {
@@ -69,6 +120,7 @@ const ExperienceSection = () => {
       setexperienceInput((prevInputs) => {
         const updatedInputs = [...prevInputs];
         updatedInputs.splice(index, 1);
+        checkEmptyFields(updatedInputs);
         return updatedInputs;
       });
     }
@@ -174,12 +226,12 @@ const ExperienceSection = () => {
       }`}
     >
       <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
-        <div className="flex items-center justify-between">
+        <div className="md:flex items-center justify-between">
           <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
             EXPERIENCE SECTION
           </h1>
           {timestamp && (
-            <p className="text-gray-700 dark:text-gray-200">
+            <p className="xs:text-sm pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
               Last Updated: {new Date(timestamp).toLocaleString()}
             </p>
           )}
@@ -190,7 +242,6 @@ const ExperienceSection = () => {
             name={"Add Experience"}
             onClick={addExperienceField}
             disabled={loading}
-
           />
         </div>
         <form onSubmit={handleSubmit}>
@@ -202,6 +253,7 @@ const ExperienceSection = () => {
                   value={input}
                   index={index}
                   loading={loading}
+                  handleExperienceChange={handleExperienceChange}
                 />
               </div>
             ))}
@@ -211,6 +263,7 @@ const ExperienceSection = () => {
               type={"submit"}
               name={docId ? "Update" : "Save"}
               loading={loading}
+              emptyValue={emptyValue}
             />
           </div>
         </form>
