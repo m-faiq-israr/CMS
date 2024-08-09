@@ -12,6 +12,7 @@ import { FaLaptopCode } from "react-icons/fa";
 import { MdWork } from "react-icons/md";
 import LogoutButton from "../Buttons/LogoutButton";
 import ThemeToggle from "../Buttons/ThemeToggle";
+import { SiGooglegemini } from "react-icons/si";
 
 const SideBar = () => {
   const { openSidebar, sidebarPage, setsidebarPage, activeTab, setActiveTab } =
@@ -74,10 +75,10 @@ const SideBar = () => {
               isActive={activeTab === "Project Section"}
             />
             <SidebarTab
-              name={"ChatBot"}
-              icon={<FaLaptopCode />}
-              onClick={() => handleTabClick("ChatBot")}
-              isActive={activeTab === "ChatBot"}
+              name={"Chat with Gemini"}
+              icon={<SiGooglegemini />}
+              onClick={() => handleTabClick("Chat with Gemini")}
+              isActive={activeTab === "Chat with Gemini"}
             />
           </div>
         </div>

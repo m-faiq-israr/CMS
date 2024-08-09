@@ -221,17 +221,17 @@ const ExperienceSection = () => {
 
   return (
     <div
-      className={`h-scree py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
+      className={`min-h-screen h-full py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
-      <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
+      <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg  px-10 mt-5 py-10 rounded-3xl">
         <div className="md:flex items-center justify-between">
           <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
             EXPERIENCE SECTION
           </h1>
           {timestamp && (
-            <p className="xs:text-sm pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
+            <p className="text-xs md:text-base pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
               Last Updated: {new Date(timestamp).toLocaleString()}
             </p>
           )}

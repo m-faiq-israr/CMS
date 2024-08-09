@@ -206,18 +206,18 @@ const PersonalDetails = () => {
 
   return (
     <div
-      className={`pb-10 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
+      className={`pb-10 min-h-screen h-full font-poppins duration-300 xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
-      <div className="bg-white shadow-lg shadow-gray-300 dark:shadow-none px-10 py-10 mt-6 rounded-3xl dark:bg-gray-700 ">
+      <div className="bg-white shadow-lg  dark:shadow-none px-10 py-10 mt-6 rounded-3xl dark:bg-gray-700 ">
         <form onSubmit={handleSubmit}>
           <div className="md:flex  items-center justify-between">
             <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
               PERSONAL DETAILS
             </h1>
             {timestamp && (
-              <p className="xs:text-sm pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
+              <p className="text-xs md:text-base pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
                 Last Updated: {new Date(timestamp).toLocaleString()}
               </p>
             )}
@@ -334,7 +334,7 @@ const PersonalDetails = () => {
                 {imageUrl ? "Edit Picture" : "Upload Picture"}
               </label>
               <input
-                className="bg-gray-100 cursor-pointer dark:bg-gray-600 dark:text-gray-200 disabled:cursor-not-allowed"
+                className="bg-gray-100 text-sm md:text-base rounded-xl cursor-pointer dark:bg-gray-600 dark:text-gray-200 disabled:cursor-not-allowed"
                 type="file"
                 id="profilePicture"
                 name="profilePicture"
@@ -352,7 +352,7 @@ const PersonalDetails = () => {
                   <button
                     onClick={handleDeleteImage}
                     disabled={loading}
-                    className=" disabled:cursor-not-allowed   inline-flex cursor-pointer items-center gap-1 mt-2 text-gray-100 bg-red-600 hover:bg-red-700 py-2 px-3 rounded-xl font-semibold"
+                    className=" disabled:cursor-not-allowed text-sm md:text-base   inline-flex cursor-pointer items-center gap-1 mt-2 text-gray-100 bg-red-600 hover:bg-red-700 px-2 py-1 md:py-2 md:px-3 rounded-xl font-semibold"
                   >
                     <h1>Delete Image</h1>
                     <div>
@@ -362,7 +362,7 @@ const PersonalDetails = () => {
                 </div>
               )}
               <p
-                className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                className="mt-1 text-xs md:text-sm text-gray-500 dark:text-gray-300"
                 id="file_input_help"
               >
                 SVG, PNG, JPG or GIF (MAX. 800x400px).

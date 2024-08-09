@@ -23,29 +23,29 @@ const ProjectSection = () => {
   const [loading, setloading] = useState(false);
   const [timestamp, settimestamp] = useState(null);
   const [emptyValue, setEmptyValue] = useState(true);
-   const [projectInput, setprojectInput] = useState([
-     {
-       projectTitle: "",
-       techUsed: "",
-       point1: "",
-     },
-   ]);
+  const [projectInput, setprojectInput] = useState([
+    {
+      projectTitle: "",
+      techUsed: "",
+      point1: "",
+    },
+  ]);
 
-    const checkEmptyFields = (inputs) => {
-      const allEmpty = inputs.every(
-        (input) => !input.projectTitle && !input.techUsed && !input.point1
-      );
-      setEmptyValue(allEmpty);
-    };
+  const checkEmptyFields = (inputs) => {
+    const allEmpty = inputs.every(
+      (input) => !input.projectTitle && !input.techUsed && !input.point1
+    );
+    setEmptyValue(allEmpty);
+  };
 
-     const handleProjectChange = (index, field, value) => {
-       setprojectInput((prevInputs) => {
-         const updatedInputs = [...prevInputs];
-         updatedInputs[index][field] = value;
-          checkEmptyFields(updatedInputs);
-         return updatedInputs;
-       });
-     };
+  const handleProjectChange = (index, field, value) => {
+    setprojectInput((prevInputs) => {
+      const updatedInputs = [...prevInputs];
+      updatedInputs[index][field] = value;
+      checkEmptyFields(updatedInputs);
+      return updatedInputs;
+    });
+  };
 
   useEffect(() => {
     const fetchProjectData = async () => {
@@ -60,7 +60,7 @@ const ProjectSection = () => {
           const doc = querySnapshot.docs[0];
           const data = doc.data();
           setprojectInput(data.projectData);
-          settimestamp(data.timestamp)
+          settimestamp(data.timestamp);
           checkEmptyFields(data.projectData);
           setDocId(doc.id);
         }
@@ -75,10 +75,10 @@ const ProjectSection = () => {
       ...prevInputs,
       { projectTitle: "", techUsed: "", point1: "" },
     ]);
-     checkEmptyFields([
-       ...inputs,
-       { projectTitle: "", techUsed: "", point1: "" },
-     ]);
+    checkEmptyFields([
+      ...inputs,
+      { projectTitle: "", techUsed: "", point1: "" },
+    ]);
   };
 
   const removeProjectField = (index) => {
@@ -86,7 +86,7 @@ const ProjectSection = () => {
       setprojectInput((prevInputs) => {
         const updatedInputs = [...prevInputs];
         updatedInputs.splice(index, 1);
-         checkEmptyFields(updatedInputs);
+        checkEmptyFields(updatedInputs);
         return updatedInputs;
       });
     }
@@ -95,91 +95,88 @@ const ProjectSection = () => {
   const notify = (msg) => toast.success(msg, { duration: 1000 });
 
   const notifyError = (error) => toast.error(error);
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const projectData = projectInput.map((input) => {
-    const { projectTitle, techUsed, point1 } = input;
-    return { projectTitle, techUsed, point1 };
-  });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const projectData = projectInput.map((input) => {
+      const { projectTitle, techUsed, point1 } = input;
+      return { projectTitle, techUsed, point1 };
+    });
 
-  if (!user) {
-    console.log("User not authenticated");
-    return;
-  }
-
-  try {
-    setloading(true); // Use camelCase for setLoading
-    let docIdToUpdate;
-
-    if (docId) {
-      // Update existing document
-      const docRef = doc(db, "Project Details", docId);
-      await updateDoc(docRef, { projectData });
-      docIdToUpdate = docId;
-      // notify("Project Details Updated");
-    } else {
-      // Add new document
-      const docRef = await addDoc(collection(db, "Project Details"), {
-        id: user.uid,
-        projectData,
-      });
-      docIdToUpdate = docRef.id;
-      console.log("Document written with id: ", docRef.id);
-      notify("Project Details Added");
-      setDocId(docIdToUpdate);
+    if (!user) {
+      console.log("User not authenticated");
+      return;
     }
 
-    if (!docIdToUpdate) {
-      throw new Error("Document ID is undefined or empty");
-    }
+    try {
+      setloading(true); // Use camelCase for setLoading
+      let docIdToUpdate;
 
-    // Call the cloud function to update the timestamp
-    console.log("Calling Cloud Function with docId:", docIdToUpdate);
-    const response = await fetch(
-      "http://localhost:5001/cms-d4a0e/us-central1/projectSectionTimestamp",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${await user.getIdToken()}`,
-        },
-        body: JSON.stringify({ docId: docIdToUpdate }),
+      if (docId) {
+        // Update existing document
+        const docRef = doc(db, "Project Details", docId);
+        await updateDoc(docRef, { projectData });
+        docIdToUpdate = docId;
+        // notify("Project Details Updated");
+      } else {
+        // Add new document
+        const docRef = await addDoc(collection(db, "Project Details"), {
+          id: user.uid,
+          projectData,
+        });
+        docIdToUpdate = docRef.id;
+        console.log("Document written with id: ", docRef.id);
+        notify("Project Details Added");
+        setDocId(docIdToUpdate);
       }
-    );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Failed to update timestamp:", errorText);
-      throw new Error("Failed to update timestamp: " + errorText);
-    }
+      if (!docIdToUpdate) {
+        throw new Error("Document ID is undefined or empty");
+      }
 
-    console.log("Project timestamp updated successfully");
+      // Call the cloud function to update the timestamp
+      console.log("Calling Cloud Function with docId:", docIdToUpdate);
+      const response = await fetch(
+        "http://localhost:5001/cms-d4a0e/us-central1/projectSectionTimestamp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await user.getIdToken()}`,
+          },
+          body: JSON.stringify({ docId: docIdToUpdate }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Failed to update timestamp:", errorText);
+        throw new Error("Failed to update timestamp: " + errorText);
+      }
+
+      console.log("Project timestamp updated successfully");
       notify("Project Details Updated");
 
-
-    setloading(false);
-  } catch (e) {
-    setloading(false);
-    console.log(e);
-    notifyError(e.message);
-  }
-};
-
-
+      setloading(false);
+    } catch (e) {
+      setloading(false);
+      console.log(e);
+      notifyError(e.message);
+    }
+  };
 
   return (
     <div
-      className={`xs:h-full py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
+      className={`min-h-screen h-full py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 ${
         openSidebar ? "" : "mr-36"
       }`}
     >
-      <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg shadow-gray-300 px-10 mt-5 py-10 rounded-3xl">
+      <div className="bg-white dark:bg-gray-700 dark:shadow-none shadow-lg  px-10 mt-5 py-10 rounded-3xl min-h-[70vh">
         <div className="md:flex items-center justify-between">
           <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
             PROJECT SECTION
           </h1>
           {timestamp && (
-            <p className="xs:text-sm pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
+            <p className="text-xs md:text-base pb-2 md:pb-0 text-gray-700 dark:text-gray-200">
               Last Updated: {new Date(timestamp).toLocaleString()}
             </p>
           )}

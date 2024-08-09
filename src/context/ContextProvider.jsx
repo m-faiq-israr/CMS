@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, useRef} from "react";
-import { sendMsgToAI } from "../components/ChatBot/OpenAi";
-
+import { sendMsgToAI } from "../components/ChatBot/Gemini";
 import { useAuth } from "../Firebase/AuthContext";
 import {
   getFirestore,
@@ -208,57 +207,83 @@ export const ContextProvider = ({ children }) => {
 
 
   //chatbot
+const [showSlide, setShowSlide] = useState(false);
+const [Mobile, setMobile] = useState(false);
+const [chatValue, setChatValue] = useState("");
+const [chatLoading, setChatLoading] = useState(false); // State to track chatLoading
+const [message, setMessage] = useState([
+  {
+    text: `Hello, How can I help you today?`,
+    isBot: true,
+  },
+]);
+const msgEnd = useRef(null);
 
-   const [showSlide, setShowSlide] = useState(false);
-  const [Mobile, setMobile] = useState(false);
-  const [chatValue, setChatValue] = useState("");
-  const [message, setMessage] = useState([
+const handleSend = async () => {
+  const text = chatValue.trim();
+  if (!text) return; // Avoid sending empty messages
+
+  setChatValue("");
+  setChatLoading(true); // Start chatLoading
+  setMessage((prevMessages) => [...prevMessages, { text, isBot: false }]);
+
+  try {
+    const res = await sendMsgToAI(text);
+    setMessage((prevMessages) => [...prevMessages, { text: res, isBot: true }]);
+  } catch (error) {
+    setMessage((prevMessages) => [
+      ...prevMessages,
+      { text: "An error occurred while fetching the response.", isBot: true },
+    ]);
+  } finally {
+    setChatLoading(false); // Stop chatLoading
+  }
+
+  msgEnd.current?.scrollIntoView({ behavior: "smooth" });
+};
+
+const handleKeyPress = (e) => {
+  if (e.key === "Enter") {
+    handleSend();
+  }
+};
+
+const clearChat = () => {
+  setMessage([
     {
-      text: "Hi, I'm ChatGPT, a powerful language model created by OpenAI. My primary function is to assist users in generating human-like text based on the prompts and questions I receive. I have been trained on a diverse range of internet text up until September 2021, so I can provide information, answer questions, engage in conversations, offer suggestions, and more on a wide array of topics. Please feel free to ask me anything or let me know how I can assist you today!",
+      text: `Hello, How can I help you today?`,
       isBot: true,
     },
   ]);
-  const msgEnd = useRef(null);
+};
 
-  // useEffect(() => {
-  //   msgEnd.current.scrollIntoView();
-  // }, [message]);
+   const handleQuery = async (prompt) => {
+     setChatLoading(true); // Start chatLoading
+     setMessage((prevMessages) => [
+       ...prevMessages,
+       { text: prompt, isBot: false },
+     ]);
 
-  // button Click function
-  const handleSend = async () => {
-    const text = chatValue;
-    setChatValue("");
-    setMessage([...message, { text, isBot: false }]);
-    const res = await sendMsgToAI(text);
-    setMessage([
-      ...message,
-      { text, isBot: false },
-      { text: res, isBot: true },
-    ]);
-  };
+     try {
+       const res = await sendMsgToAI(prompt);
+       setMessage((prevMessages) => [
+         ...prevMessages,
+         { text: res, isBot: true },
+       ]);
+     } catch (error) {
+       setMessage((prevMessages) => [
+         ...prevMessages,
+         {
+           text: "An error occurred while fetching the response.",
+           isBot: true,
+         },
+       ]);
+     } finally {
+       setChatLoading(false); // Stop chatLoading
+     }
 
-  // Enter Click function
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSend();
-    }
-  };
-
-  // Query Click function
-  const handleQuery = async (e) => {
-    const text = e.target.innerText;
-    setMessage([...message, { text, isBot: false }]);
-    const res = await sendMsgToAI(text);
-    setMessage([
-      ...message,
-      { text, isBot: false },
-      { text: res, isBot: true },
-    ]);
-  };
-
-
-
-
+     msgEnd.current?.scrollIntoView({ behavior: "smooth" });
+   };
 
 
 
@@ -305,6 +330,8 @@ export const ContextProvider = ({ children }) => {
         message,
         msgEnd,
         handleKeyPress,
+        chatLoading,
+        clearChat,
         handleQuery,
       }}
     >

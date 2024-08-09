@@ -13,7 +13,8 @@ const RemoveFieldButton = ({name, onClick, disabled}) => {
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className={` bg-red-600 px-4 py-2 rounded-xl text-white font-semibold hover:bg-red-700 select-none disabled:bg-red-600 disabled:cursor-not-allowed flex items-center gap-1`}
+        className={` bg-red-600 text-sm md:text-base px-2 py-1 
+          md:px-4 md:py-2 rounded-xl text-white font-semibold hover:bg-red-700 select-none disabled:bg-red-600 disabled:cursor-not-allowed flex items-center gap-1`}
         // disabled= {disableButton}
       >
         {name}

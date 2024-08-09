@@ -11,7 +11,7 @@ const LayoutPreviewPage = () => {
     };
   return (
     <div
-      className={` bg-indigo-100 xs:-ml-[10%]  h-screen  dark:bg-gray-800  w-screen ${
+      className={` bg-indigo-100 xs:-ml-[10%]  min-h-screen h-full  dark:bg-gray-800  w-screen ${
         openSidebar ? "" : " "
       } duration-300`}
     >

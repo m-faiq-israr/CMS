@@ -7,7 +7,7 @@ const InputButton = ({name, type, loading, emptyValue}) => {
     <button
       type={type}
       disabled={loading || emptyValue}
-      className=" disabled:cursor-not-allowed disabled:bg-indigo-600 bg-indigo-500 font-poppins font-semibold text-white py-2 px-8 rounded-xl hover:bg-indigo-600  text-center"
+      className=" disabled:cursor-not-allowed text-sm md:text-base disabled:bg-indigo-600 bg-indigo-500 font-poppins font-semibold text-white px-4 py-1 md:py-2 md:px-8 rounded-xl hover:bg-indigo-600  text-center"
     >
       {loading ? (
         <FiLoader className="animate-spin mx-8 " size={20} />

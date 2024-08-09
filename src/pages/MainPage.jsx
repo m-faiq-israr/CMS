@@ -3,7 +3,7 @@ import AdminPage from "./LayoutPages/AdminPage";
 
 const MainPage = () => {
   return (
-    <div className="bg-indigo-100 dark:bg-gray-800 duration-300 ">
+    <div className=" bg-gray-50 dark:bg-gray-800 duration-300 ">
       <AdminPage />
     </div>
   );

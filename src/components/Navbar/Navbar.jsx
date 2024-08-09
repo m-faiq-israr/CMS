@@ -77,7 +77,7 @@ const Navbar = () => {
         </div>
       </div>
       <div
-        className="text-gray-800 dark:text-white  text-lg cursor-pointer"
+        className="text-gray-800 dark:text-white  text-lg cursor-pointer "
         onClick={toggleMenu}
       >
         <FiMenu />
@@ -85,7 +85,7 @@ const Navbar = () => {
       {menuOpen && (
         <div
           ref={menuRef}
-          className={`absolute text-sm right-4 top-12 select-none bg-gray-100 dark:bg-gray-600   rounded-lg shadow-lg py-2`}
+          className={`absolute text-sm right-4 top-12 select-none z-10 bg-gray-100 dark:bg-gray-600   rounded-lg shadow-lg py-2`}
         >
           <ul>
             <li
@@ -148,11 +148,26 @@ const Navbar = () => {
             >
               Project Section
             </li>
+            <li
+              className={`px-4 py-2  cursor-pointer ${
+                sidebarPage === "Chat with Gemini"
+                  ? "text-blue-500"
+                  : "text-gray-800 dark:text-gray-100  hover:text-gray-500"
+              }`}
+              onClick={() => handleClick("Chat with Gemini")}
+            >
+              Chat with Gemini
+            </li>
             <div className="px-4 flex items-center  justify-between">
-              <h1 className="text-gray-800 pb-2 dark:text-gray-100 ">Theme: </h1>
+              <h1 className="text-gray-800 pb-2 dark:text-gray-100 ">
+                Theme:{" "}
+              </h1>
               <ThemeToggle />
             </div>
-            <div onClick={Logout} className="px-4  cursor-pointer text-red-500 hover:text-red-600 dark:text-red-500 dark:hover:text-red-600 font-semibold ">
+            <div
+              onClick={Logout}
+              className="px-4  cursor-pointer text-red-500 hover:text-red-600 dark:text-red-500 dark:hover:text-red-600 font-semibold "
+            >
               <h1>Logout</h1>
             </div>
           </ul>

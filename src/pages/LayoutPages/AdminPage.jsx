@@ -51,10 +51,9 @@ const AdminPage = () => {
             <ExperienceSection />
           ) : sidebarPage === "Project Section" ? (
             <ProjectSection />
-          ) : sidebarPage === "ChatBot" ? (
+          ) : sidebarPage === "Chat with Gemini" ? (
             <div className="">
-
-              <ChatbotPage/>
+              <ChatbotPage />
             </div>
           ) : (
             <HomePage />
