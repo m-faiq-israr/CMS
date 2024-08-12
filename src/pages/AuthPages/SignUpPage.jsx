@@ -90,7 +90,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="bg-indigo-100 dark:bg-gray-800  py-10  font-poppins xs:pt-24">
+    <div className=" min-h-screen h-full bg-indigo-100 dark:bg-gray-800  py-10  font-poppins xs:pt-24">
       <div className="absolute right-2 top-1">
         {/* <ThemeToggle /> */}
       </div>

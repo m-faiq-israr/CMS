@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import MyImage from '../../assets/myImg1.jpg'
-import userPic from '../../assets/user1.png'
+// import userPic from '../../assets/user1.png'
 import { useStateContext } from '../../context/ContextProvider';
 import { useAuth } from '../../Firebase/AuthContext';
 
@@ -21,7 +21,7 @@ const SideProfileComp = () => {
               <div className=" rounded-full h-16 w-16  duration-300   ">
                 <img
                   className="w-full h-full object-cover rounded-full "
-                  src={userImage ? userImage : userPic}
+                  src={userImage ? userImage : '/user1.png'}
                   alt="Picture not available"
                 />
               </div>

@@ -19,9 +19,10 @@ const ContactDetails = ({ linkedIn}) => {
       </div>
 
       <div className="flex items-center gap-2">
-        {getPersonalDetailsData[0].mobileno ? (
+        {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
           <>
             <FaMobile />
+
             <p>{getPersonalDetailsData[0].mobileno}</p>
           </>
         ) : (
@@ -29,7 +30,7 @@ const ContactDetails = ({ linkedIn}) => {
         )}
       </div>
       <div className="flex items-center gap-2">
-        {getPersonalDetailsData[0].location ? (
+        {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
           <>
             <IoLocationSharp />
             <p>{getPersonalDetailsData[0].location}</p>

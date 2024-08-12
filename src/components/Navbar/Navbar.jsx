@@ -1,7 +1,7 @@
 // src/components/Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { FiMenu } from "react-icons/fi";
-import userPic from "../../assets/user1.png";
+// import userPic from "../../assets/user1.png";
 import { useAuth } from "../../Firebase/AuthContext";
 import { useStateContext } from "../../context/ContextProvider";
 import ThemeToggle from "../Buttons/ThemeToggle";
@@ -55,7 +55,7 @@ const Navbar = () => {
         <div className=" rounded-full h-12 w-12  duration-300   ">
           <img
             className="w-full h-full object-cover rounded-full "
-            src={userImage ? userImage : userPic}
+            src={userImage ? userImage : '/icon.png'}
             alt="Picture not available"
           />
         </div>

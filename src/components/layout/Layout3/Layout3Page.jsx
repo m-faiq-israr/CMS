@@ -4,7 +4,7 @@ import MainCard from "../Layout1/MainCard";
 
 const Layout3Page = () => {
   return (
-    <div className="flex flex-col items-center  py-10 bg-indigo-200 dark:bg-slate-800  px-2 ">
+    <div className="flex flex-col items-center   py-10 bg-indigo-200 dark:bg-slate-800  px-2 ">
       <div>
 
       <div className="w-full">

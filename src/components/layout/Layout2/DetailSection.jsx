@@ -9,6 +9,7 @@ import SkillTab from './SkillTab';
 import { FaCodeBranch } from 'react-icons/fa';
 import EducationTab from './EducationTab';
 import { RiGraduationCapFill } from 'react-icons/ri';
+import ProjectSection from '../../ProjectComps/ProjectSection';
 
 const DetailSection = () => {
   const {
@@ -18,6 +19,7 @@ const DetailSection = () => {
     getSkills,
     getEducationData,
   } = useStateContext();
+// console.log(getProjectData[0].projectTitle);
   return (
     <div className=" bg-gray-50 dark:bg-gray-100 xs:px-6 sm:px-6  md:px-10 xs:py-4 sm:py-4 md:py-8 xs:rounded-b-xl  md:rounded-r-xl lg:rounded-r-xl font-poppins">
       {/* div for about details */}
@@ -25,7 +27,7 @@ const DetailSection = () => {
         <AboutSection />
       </div>
       <div className="xs:block sm:block md:hidden">
-        {getPersonalDetailsData[0].aboutme ? (
+        {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
           <>
             <h1 className="font-bold text-gray-800 text-2xl">About Me</h1>
             <p className=" text-gray-700">
@@ -115,8 +117,8 @@ const DetailSection = () => {
       </div>
 
       {/* project section */}
-      <div className="xs:mt-6 sm:mt-6 md:mt-8 mb-6">
-        {getProjectData && getProjectData.length > 0 ? (
+      <div className="xs:mt-6 sm:mt-6 md:mt-8 mb-6 ">
+        {getProjectData && getProjectData.length > 0 && (
           <>
             <div className="flex items-center gap-2 text-gray-800 font-bold text-2xl font-poppins">
               <div className="bg-gray-800 xs:p-1 sm:p-1 lg:w-10 lg:h-10  flex items-center justify-center rounded-full text-gray-200">
@@ -126,16 +128,19 @@ const DetailSection = () => {
             </div>
             <div>
               {getProjectData.map((project, index) => (
-                <ProjectComponent
-                  key={index}
-                  ProjectName={project.projectTitle}
-                  techUsed={project.techUsed}
-                />
+                <div key={index}>
+                  <ProjectComponent
+                    projectName={project.projectTitle}
+                    techUsed={project.techUsed}
+                    point1={project.point1}
+                    lightText={"text-gray-700"}
+                    lightTextPoint={"text-gray-500"}
+                    dotColor={'text-teal-700'}
+                  />
+                </div>
               ))}
             </div>
           </>
-        ) : (
-          <div className=""></div>
         )}
       </div>
     </div>

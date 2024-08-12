@@ -2,7 +2,7 @@ import React from "react";
 import MyImage from "../../../assets/myImg1.jpg";
 import { FaCodeBranch } from "react-icons/fa";
 import { RiGraduationCapFill } from "react-icons/ri";
-import userPic from "../../../assets/user1.png";
+// import userPic from "../../../assets/user1.png";
 import SkillTab from "./SkillTab";
 import EducationTab from "./EducationTab";
 
@@ -21,13 +21,12 @@ const ProfileSection = () => {
         <div className=" rounded-full xs:my-4 sm:my-4 xs:h-28 xs:w-28 sm:h-32 sm:w-32 md:h-40 md:w-40 ml- inline-flex justify-center items-center  ring-4 ring-emerald-600  ">
           <img
             className="w-full h-full object-cover rounded-full"
-            src={userImage ? userImage : userPic}
+            src={userImage ? userImage : "/user1.png"}
             alt="Picture not available"
           />
         </div>
         <div className=" xs:block sm:block md:hidden">
-          {getPersonalDetailsData &&
-          getPersonalDetailsData.length > 0 ? (
+          {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
             <AboutSection />
           ) : (
             <></>
@@ -47,7 +46,8 @@ const ProfileSection = () => {
                 <h1 className="text-2xl">Skills</h1>
               </div>
               <div className="mt-4">
-                {getSkills.map((skill, index) => (
+              
+                {getSkills && getSkills.map((skill, index) => (
                   <div key={index} className=" flex flex-col items-start ">
                     <SkillTab skillName={skill} />
                   </div>

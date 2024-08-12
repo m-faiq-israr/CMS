@@ -162,11 +162,11 @@ const EducationSection = () => {
 
   return (
     <div
-      className={`py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 h-scree ${
+      className={`py-2 font-poppins duration-300 xs:mx-6 sm:mx-6 min-h-screen h-full ${
         openSidebar ? "" : "mr-36"
       }`}
     >
-      <div className="min-h-screen h-full bg-white dark:bg-gray-700 shadow-lg dark:shadow-none  px-10 mt-5 py-10 rounded-3xl">
+      <div className=" bg-white dark:bg-gray-700 shadow-lg dark:shadow-none  px-10 mt-5 py-10 rounded-3xl">
         <div className="md:flex items-center justify-between">
           <h1 className="xs:text-2xl text-4xl font-bold text-gray-700 dark:text-gray-100">
             EDUCATION SECTION

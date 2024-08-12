@@ -4,7 +4,7 @@ import { FiUser, FiMessageSquare } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
 import { useStateContext } from "../../context/ContextProvider";
 import { useAuth } from "../../Firebase/AuthContext";
-import userPic from "../../assets/user1.png";
+// import userPic from "../../assets/user1.png";
 
 function Mobile() {
   const { Mobile, setMobile, handleQuery, getPersonalDetailsData, clearChat } =
@@ -66,7 +66,7 @@ function Mobile() {
           <span className="rounded w-full py-2 px-2 text-xs flex gap-1 items-center justify-between cursor-pointer transition-all duration-300">
             <span className="flex gap-2 items-center justify-center text-sm font-bold">
               <img
-                src={userImage ? userImage : userPic}
+                src={userImage ? userImage : "/user1.png"}
                 alt="user"
                 className="w-8 h-8 object-cover rounded-sm"
               />

@@ -32,7 +32,7 @@ const MainCard = ({ roundness, AboutmeBg }) => {
         <ProfileCardSmall />
       </div>
       {/* div for about me section */}
-      {getPersonalDetailsData[0].aboutme ? (
+      {getPersonalDetailsData && getPersonalDetailsData.length > 0 ? (
         <>
           <div className="pb-6 px-4 md:px-10 pt-6">
             <HeadingComponent name={"About Me"} />
@@ -90,7 +90,13 @@ const MainCard = ({ roundness, AboutmeBg }) => {
 
             <div className=" mt-4">
               <HeadingComponent name={"Projects"} />
-              <ProjectSection />
+              <ProjectSection
+                lightTextPoint={"text-gray-500"}
+                darkTextPoint={"text-gray-300"}
+                lightText={"text-gray-700"}
+                darkText={"text-gray-100"}
+                
+              />
             </div>
           </>
         ) : (

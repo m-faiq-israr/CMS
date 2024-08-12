@@ -1,8 +1,13 @@
 import React from 'react'
 import ProjectComponent from './ProjectComponent';
 import { useStateContext } from '../../context/ContextProvider';
-const ProjectSection = () => {
-  const { getProjectData} = useStateContext();
+const ProjectSection = ({
+  lightTextPoint,
+  darkTextPoint,
+  lightText,
+  darkText,
+}) => {
+  const { getProjectData } = useStateContext();
   return (
     <>
       {getProjectData ? (
@@ -13,6 +18,10 @@ const ProjectSection = () => {
               projectName={project.projectTitle}
               techUsed={project.techUsed}
               point1={project.point1}
+              lightTextPoint={lightTextPoint}
+              darkTextPoint={darkTextPoint}
+              lightText={lightText}
+              darkText={darkText}
             />
           ))}
         </div>
@@ -21,6 +30,6 @@ const ProjectSection = () => {
       )}
     </>
   );
-}
+};
 
 export default ProjectSection

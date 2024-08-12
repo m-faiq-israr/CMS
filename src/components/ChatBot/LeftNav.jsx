@@ -4,7 +4,7 @@ import { LuPanelLeftClose } from "react-icons/lu";
 import { FiMessageSquare } from "react-icons/fi";
 import { FaSpinner } from "react-icons/fa";
 import { useStateContext } from "../../context/ContextProvider";
-import userPic from "../../assets/user1.png";
+// import userPic from "../../assets/user1.png";
 import { useAuth } from "../../Firebase/AuthContext";
 
 function LeftNav() {
@@ -82,7 +82,7 @@ function LeftNav() {
         <span className="rounded w-full py-2 pl-2 pr-4 text-xs flex gap-1 items-center justify-between cursor-pointer  transition-all duration-300">
           <span className="flex gap-2 items-center justify-center text-sm font-bold">
             <img
-              src={userImage ? userImage : userPic}
+              src={userImage ? userImage : "/user1.png"}
               alt="user"
               className="w-8 h-8 object-cover rounded-sm"
             />
