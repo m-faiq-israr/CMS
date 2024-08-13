@@ -1,20 +1,28 @@
 import React from "react";
 import { HiOutlineDownload } from "react-icons/hi";
-import { useStateContext } from "../../context/ContextProvider";
+import { FaSpinner } from "react-icons/fa";
 
-const Button = ({bgColor, hoverColor, handleClick}) => {
-  const { downloadPDF } = useStateContext();
+const Button = ({ bgColor, hoverColor, handleClick, loading }) => {
   return (
     <button
-    onClick={handleClick}
-      className={ `bg-${bgColor} px-4 py-3 text-sm   flex items-center justify-center text-white rounded-xl hover:bg-${hoverColor} hover:cursor-pointer select-none  font-poppins  `}
-      
+      onClick={handleClick}
+      className={`bg-${bgColor} px-4 py-3 text-sm flex items-center disabled:cursor-not-allowed justify-center text-white rounded-xl hover:bg-${hoverColor} cursor-pointer font-poppins`}
+      disabled={loading} // Disable the button when loading
     >
-      <HiOutlineDownload
-        className=" mr-1"
-        style={{ color: "white", fontSize: "20px" }}
-      />
-      <div className="">Download CV</div>
+      {loading ? (
+        <FaSpinner
+          className="animate-spin mr-2"
+          style={{ color: "white", fontSize: "20px" }}
+        />
+      ) : (
+        <>
+          <HiOutlineDownload
+            className="mr-1"
+            style={{ color: "white", fontSize: "20px" }}
+          />
+          <div>Download CV</div>
+        </>
+      )}
     </button>
   );
 };
